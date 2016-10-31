@@ -1,0 +1,11 @@
+{
+  "name": "sync-glob",
+  "version": "1.0.0",
+  "description": "Synchronize files and folders locally by glob patterns, watch option included.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andreas Deuschlinger",
+  "license": "MIT"
+}
