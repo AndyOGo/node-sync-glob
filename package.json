@@ -4,7 +4,13 @@
   "description": "Synchronize files and folders locally by glob patterns, watch option included.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src --out-dir ./",
+    "predev": "npm run build",
+    "dev": "node bin/sync-glob.js",
+    "preversion": "npm run build",
+    "version": "node bin/sync-glob.js --version",
+    "pretest": "npm run build",
+    "test": "node bin/sync-glob.js -w -v test/**/* !test/**/b.txt tmp"
   },
   "author": "Andreas Deuschlinger",
   "license": "MIT",
