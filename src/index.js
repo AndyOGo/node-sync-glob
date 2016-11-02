@@ -34,11 +34,11 @@ const syncGlob = (source, target, options, notify) => {
       ignoreInitial: true,
     })
       .on('ready', notify.bind(undefined, 'watch', source))
-      .on('add', watcherCopy(source, target, options, notify))
-      .on('addDir', watcherCopy(source, target, options, notify))
-      .on('change', watcherCopy(source, target, options, notify))
-      .on('unlink', watcherDestroy(source, target, options, notify))
-      .on('unlinkDir', watcherDestroy(source, target, options, notify))
+      .on('add', watcherCopy(target, options, notify))
+      .on('addDir', watcherCopy(target, options, notify))
+      .on('change', watcherCopy(target, options, notify))
+      .on('unlink', watcherDestroy(target, options, notify))
+      .on('unlinkDir', watcherDestroy(target, options, notify))
       .on('error', watcherError(options, notify))
   }
 }
