@@ -1,3 +1,5 @@
+
+
 import chokidar from 'chokidar'
 
 import mirror from './lib/mirror'
@@ -29,7 +31,7 @@ const syncGlob = (source, target, options, notify) => {
 
   if (options.watch) {
     // Watcher to keep in sync from that
-    chokidar.watch(source, {
+    const watcher = chokidar.watch(source, {
       persistent: true,
       depth: options.depth,
       ignoreInitial: true,
@@ -41,6 +43,14 @@ const syncGlob = (source, target, options, notify) => {
       .on('unlink', watcherDestroy(target, options, notify))
       .on('unlinkDir', watcherDestroy(target, options, notify))
       .on('error', watcherError(options, notify))
+
+    process.on('SIGINT', stopWatching)
+    process.on('SIGQUIT', stopWatching)
+    process.on('SIGTERM', stopWatching)
+
+    function stopWatching() {
+      watcher.close()
+    }
   }
 }
 
