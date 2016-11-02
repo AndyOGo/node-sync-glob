@@ -1,4 +1,4 @@
-
+/* globals process */
 
 import chokidar from 'chokidar'
 
