@@ -23,6 +23,7 @@ const syncGlob = (source, target, options, notify) => {
   const mirrored = mirror(source, target, options, notify, 0)
 
   if (!mirrored) {
+    notify('error', 'Initial mirror failed')
     return false
   }
 
