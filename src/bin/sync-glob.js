@@ -51,7 +51,7 @@ const notifyPriority = {
 syncGlob(source, target, {
   watch: argv.watch,
   delete: argv.delete,
-  depth: argv.depth,
+  depth: argv.depth || Infinity,
 }, (event, data) => {
   const priority = notifyPriority[event] || 'low'
 
@@ -75,7 +75,7 @@ syncGlob(source, target, {
       break
 
     case 'watch':
-      console.log('%s %s', chalk.bold('WATCHING'), chalk.yellow(path.relative(root, data)))
+      console.log('%s %s', chalk.bold('WATCHING'), chalk.yellow(data))
       break
 
     case 'max-depth':
