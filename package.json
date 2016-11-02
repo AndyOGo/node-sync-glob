@@ -9,6 +9,7 @@
   "author": "Andreas Deuschlinger",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^1.1.3",
     "chokidar": "^1.6.1",
     "yargs": "^6.3.0"
   },
