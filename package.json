@@ -10,7 +10,7 @@
     "preversion": "npm run build",
     "version": "node bin/sync-glob.js --version",
     "pretest": "npm run build",
-    "test": "node bin/sync-glob.js -w -v -d 'test/**/*' '!test/**/b.txt' tmp"
+    "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp"
   },
   "author": "Andreas Deuschlinger",
   "license": "MIT",
