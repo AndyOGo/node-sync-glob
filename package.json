@@ -18,6 +18,18 @@
   "bin": {
     "sync-glob": "bin/sync-glob.js"
   },
+  "keywords": [
+    "rsync",
+    "copy",
+    "cp",
+    "cpw",
+    "copyw",
+    "catw",
+    "folder",
+    "directory",
+    "file",
+    "glob"
+  ],
   "author": "Andreas Deuschlinger",
   "license": "MIT",
   "dependencies": {
