@@ -11,7 +11,7 @@ const mirror = (source, target, options, notify) => {
   for (let i = 0, l = files.length; i < l; ++i) {
     const file = files[i]
 
-    if (!copy(file, resolveTarget(file, target, options), notify)) {
+    if (!copy(file, resolveTarget(file, target, options), notify, true)) {
       flag = false
       break
     }
