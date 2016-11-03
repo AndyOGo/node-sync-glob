@@ -1,7 +1,7 @@
 .idea/
 node_modules/
 tmp/
-bin/
-lib/
+/bin/
+/lib/
 index.js
 npm-debug.log
