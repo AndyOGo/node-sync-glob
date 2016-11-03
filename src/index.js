@@ -4,6 +4,7 @@ import chokidar from 'chokidar'
 
 import globBase from './lib/glob-base'
 import mirror from './lib/mirror'
+import trimQuotes from './lib/trim-quotes'
 import { watcherCopy, watcherDestroy, watcherError } from './lib/watcher'
 
 const defaults = {
@@ -13,6 +14,7 @@ const defaults = {
 }
 
 const syncGlob = (source, target, options, notify) => {
+  source = source.map(trimQuotes)
   options = {
     ...defaults,
     base: globBase(source),
