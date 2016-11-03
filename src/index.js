@@ -2,6 +2,7 @@
 
 import chokidar from 'chokidar'
 
+import globBase from './lib/glob-base'
 import mirror from './lib/mirror'
 import { watcherCopy, watcherDestroy, watcherError } from './lib/watcher'
 
@@ -14,6 +15,7 @@ const defaults = {
 const syncGlob = (source, target, options, notify) => {
   options = {
     ...defaults,
+    base: globBase(source),
     ...options,
   }
 
@@ -21,6 +23,7 @@ const syncGlob = (source, target, options, notify) => {
     notify('error', 'Expected valid number for option "depth"')
     return false
   }
+
   // Initial mirror
   const mirrored = mirror(source, target, options, notify, 0)
 

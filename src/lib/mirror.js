@@ -1,9 +1,6 @@
-import path from 'path'
 import glob from 'glob-all'
 
-import { copy, deleteExtra } from './fs'
-
-const cwd = process.cwd()
+import { copy, deleteExtra, resolveTarget } from './fs'
 
 const mirror = (source, target, options, notify) => {
   let flag = true
@@ -14,7 +11,7 @@ const mirror = (source, target, options, notify) => {
   for (let i = 0, l = files.length; i < l; ++i) {
     const file = files[i]
 
-    if (!copy(file, path.join(target, path.relative(cwd, file)), notify)) {
+    if (!copy(file, resolveTarget(file, target, options), notify)) {
       flag = false
       break
     }
