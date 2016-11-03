@@ -50,6 +50,10 @@ You may have some build script in your package.json involving mirroring folders 
 }
 ```
 
+### Note
+
+Make sure that your globs are not being parsed by your shell by properly escaping them, e.g.: by quoting `'**/*'`.
+
 ## Credit/Inspiration
 
 This package was inspired by [`node-sync-files`](https://github.com/byteclubfr/node-sync-files).
