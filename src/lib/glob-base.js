@@ -1,4 +1,4 @@
-const reGlob = /(?!\\).(:?{|\*|\?|\[|[!?+*@]\()/
+import isGlob from './is-glob'
 
 const globBase = (glob) => {
   if (!Array.isArray(glob)) {
@@ -10,13 +10,13 @@ const globBase = (glob) => {
       return base
     }
 
-    const length = pattern.length
-    const match = reGlob.exec(pattern)
-    const index = match ? match.index : length
+    const index = isGlob(pattern)
 
-    if (index > 0) {
-      base.push(pattern.substring(0, index))
+    if (index > -1) {
+      pattern = pattern.substring(0, index)
     }
+
+    base.push(pattern)
 
     return base
   }, [])

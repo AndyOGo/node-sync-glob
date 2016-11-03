@@ -8,7 +8,7 @@ import yargs from 'yargs'
 
 import syncGlob from '../index'
 
-const argv = yargs.usage('sync-glob $0 <source> <target>')
+const argv = yargs.usage('Usage: $0 <sources> <target>')
   .boolean('delete')
   .alias('d', 'delete')
   .default('delete', true)
@@ -16,7 +16,7 @@ const argv = yargs.usage('sync-glob $0 <source> <target>')
   .boolean('watch')
   .alias('w', 'watch')
   .default('watch', false)
-  .describe('watch', 'Watch changes in source and keep target in sync')
+  .describe('watch', 'Watch changes in sources and keep target in sync')
   .number('depth')
   .alias('i', 'depth')
   .default('depth', Infinity)
@@ -27,6 +27,11 @@ const argv = yargs.usage('sync-glob $0 <source> <target>')
   .describe('verbose', 'Moar output')
   .version()
   .help('help')
+  .showHelpOnFail(false, 'Specify --help for available options')
+  .epilog('copyright 2016')
+  .command('sources', 'One or more globs, files or directories to be mirrored (glob exclusions are supported as well - ! prefix)', { alias: 'sources' })
+  .command('target', 'Destination folder for mirrored files', { alias: 'target' })
+  .demand(2)
   .argv
 const _ = argv._
 const length = _.length
@@ -38,7 +43,7 @@ if (length < 2) {
 
 const root = process.cwd()
 const target = _.pop()
-const source = _
+const sources = _
 const notifyPriority = {
   'error': 'high',
   'copy': 'normal',
@@ -48,7 +53,7 @@ const notifyPriority = {
   'no-delete': 'low',
 }
 
-syncGlob(source, target, {
+syncGlob(sources, target, {
   watch: argv.watch,
   delete: argv.delete,
   depth: argv.depth || Infinity,

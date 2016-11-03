@@ -3,13 +3,13 @@ import path from 'path'
 
 const cwd = process.cwd()
 
-export const copy = (source, target, notify, force = false) => {
+export const copy = (source, target, notify) => {
   notify('copy', [source, target])
 
   try {
-    const sourceStat = force || fs.statSync(source)
+    const sourceStat = fs.statSync(source)
 
-    if (force || sourceStat.isFile()) {
+    if (sourceStat.isFile()) {
       fs.copySync(source, target)
     } else if (sourceStat.isDirectory()) {
       fs.ensureDirSync(target)
