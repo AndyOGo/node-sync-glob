@@ -18,6 +18,10 @@
   "bin": {
     "sync-glob": "bin/sync-glob.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndyOGo/node-sync-glob.git"
+  },
   "keywords": [
     "rsync",
     "copy",
