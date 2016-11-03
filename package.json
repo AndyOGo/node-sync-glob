@@ -39,6 +39,7 @@
   "bugs": {
     "url": "https://github.com/AndyOGo/node-sync-glob/issues"
   },
+  "homepage": "https://github.com/AndyOGo/node-sync-glob",
   "dependencies": {
     "chalk": "^1.1.3",
     "chokidar": "^1.6.1",
