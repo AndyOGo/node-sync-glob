@@ -24,7 +24,7 @@ export const copy = (source, target, notify) => {
 export const destroy = (fileordir, notify) => {
   notify('remove', fileordir)
   try {
-    fs.remove(fileordir)
+    fs.removeSync(fileordir)
     return true
   } catch (e) {
     notify('error', e)
