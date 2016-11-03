@@ -4,9 +4,12 @@
   "description": "Synchronize files and folders locally by glob patterns, watch option included.",
   "main": "index.js",
   "scripts": {
+    "prebuild": "npm install",
     "build": "babel src --out-dir ./",
     "predev": "npm run build",
     "dev": "node bin/sync-glob.js",
+    "prehelp": "npm run build",
+    "help": "node bin/sync-glob.js --help",
     "preversion": "npm run build",
     "version": "node bin/sync-glob.js --version",
     "pretest": "npm run build",
