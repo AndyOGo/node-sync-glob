@@ -27,6 +27,11 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .describe('verbose', 'Moar output')
   .version()
   .help('help')
+  .showHelpOnFail(false, 'Specify --help for available options')
+  .epilog('copyright 2016')
+  .command('sources', 'One or more globs, files or directories to be mirrored (glob exclusions are supported as well - ! prefix)', { alias: 'sources' })
+  .command('target', 'Destination folder for mirrored files', { alias: 'target' })
+  .demand(2)
   .argv
 const _ = argv._
 const length = _.length
