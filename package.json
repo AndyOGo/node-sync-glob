@@ -14,7 +14,7 @@
     "pretest": "npm run build",
     "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp",
     "pretest:dir": "npm run build",
-    "test:dir": "node bin/sync-glob.js -w -v test/@org tmp/testdir",
+    "test:dir": "node bin/sync-glob.js -w -v test/@org '!test/**/b.txt' tmp/testdir",
     "prepublish": "npm run build"
   },
   "bin": {
