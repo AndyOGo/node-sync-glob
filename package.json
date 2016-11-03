@@ -15,6 +15,9 @@
     "pretest": "npm run build",
     "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp"
   },
+  "bin": {
+    "sync-glob": "bin/sync-glob.js"
+  },
   "author": "Andreas Deuschlinger",
   "license": "MIT",
   "dependencies": {
