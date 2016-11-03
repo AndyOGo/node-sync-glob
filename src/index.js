@@ -13,11 +13,14 @@ const defaults = {
   depth: Infinity,
 }
 
-const syncGlob = (source, target, options, notify) => {
-  source = source.map(trimQuotes)
+const syncGlob = (sources, target, options, notify) => {
+  if (!Array.isArray(sources)) {
+    sources = [sources]
+  }
+  sources = sources.map(trimQuotes)
   options = {
     ...defaults,
-    base: globBase(source),
+    base: globBase(sources),
     ...options,
   }
 
@@ -27,7 +30,7 @@ const syncGlob = (source, target, options, notify) => {
   }
 
   // Initial mirror
-  const mirrored = mirror(source, target, options, notify, 0)
+  const mirrored = mirror(sources, target, options, notify, 0)
 
   if (!mirrored) {
     notify('error', 'Initial mirror failed')
@@ -36,12 +39,12 @@ const syncGlob = (source, target, options, notify) => {
 
   if (options.watch) {
     // Watcher to keep in sync from that
-    const watcher = chokidar.watch(source, {
+    const watcher = chokidar.watch(sources, {
       persistent: true,
       depth: options.depth,
       ignoreInitial: true,
     })
-      .on('ready', notify.bind(undefined, 'watch', source))
+      .on('ready', notify.bind(undefined, 'watch', sources))
       .on('add', watcherCopy(target, options, notify))
       .on('addDir', watcherCopy(target, options, notify))
       .on('change', watcherCopy(target, options, notify))

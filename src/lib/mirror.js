@@ -3,9 +3,9 @@ import glob from 'glob-all'
 import { copy, deleteExtra, resolveTarget } from './fs'
 import isGlob from './is-glob'
 
-const mirror = (source, target, options, notify) => {
+const mirror = (sources, target, options, notify) => {
   let flag = true
-  const files = glob.sync(source.map(str => (isGlob(str) > -1 ? str : `${str}/**`)))
+  const files = glob.sync(sources.map(str => (isGlob(str) > -1 ? str : `${str}/**`)))
 
   deleteExtra(target, options, notify)
 
