@@ -44,8 +44,8 @@ You may have some build script in your package.json involving mirroring folders 
     "sync-glob": "^1.0.0"
   },
   "scripts": {
-    "build": "sync-glob src/images dist/images",
-    "watch": "sync-glob --watch src/images dist/images"
+    "build": "sync-glob 'src/images/*' dist/images",
+    "watch": "sync-glob --watch 'src/images/*' dist/images"
   }
 }
 ```

@@ -1,4 +1,4 @@
-const reStaticGlob = /^(?:\\[+*?@{}[\]()]|[^+*?@{}[\]()])+/
+const reGlob = /(?!\\).(:?{|\*|\?|\[|[!?+*@]\()/
 
 const globBase = (glob) => {
   if (!Array.isArray(glob)) {
@@ -10,10 +10,12 @@ const globBase = (glob) => {
       return base
     }
 
-    const match = pattern.match(reStaticGlob)
+    const length = pattern.length
+    const match = reGlob.exec(pattern)
+    const index = match ? match.index : length
 
-    if (match) {
-      base.push(match[0])
+    if (index > 0) {
+      base.push(pattern.substring(0, index))
     }
 
     return base
