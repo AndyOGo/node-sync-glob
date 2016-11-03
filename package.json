@@ -4,7 +4,6 @@
   "description": "Synchronize files and folders locally by glob patterns, watch option included.",
   "main": "index.js",
   "scripts": {
-    "prebuild": "npm install",
     "build": "babel src --out-dir ./",
     "predev": "npm run build",
     "dev": "node bin/sync-glob.js",
@@ -14,7 +13,7 @@
     "version": "node bin/sync-glob.js --version",
     "pretest": "npm run build",
     "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp",
-    "prepublish": "babel src --out-dir ./"
+    "prepublish": "npm run build"
   },
   "bin": {
     "sync-glob": "bin/sync-glob.js"
