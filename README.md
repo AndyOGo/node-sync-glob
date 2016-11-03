@@ -11,18 +11,25 @@ npm i sync-glob
 ## Usage
 
 ```sh
-sync-glob bin/sync-glob.js <source> <target>
+Usage: bin/sync-glob.js <sources> <target>
+
+Commands:
+  sources  One or more globs, files or directories to be mirrored (glob
+           exclusions are supported as well - ! prefix)
+  target   Destination folder for mirrored files
 
 Options:
   --version      Show version number                                   [boolean]
   --help         Show help                                             [boolean]
   -d, --delete   Delete extraneous files from target   [boolean] [default: true]
-  -w, --watch    Watch changes in source and keep target in sync
+  -w, --watch    Watch changes in sources and keep target in sync
                                                       [boolean] [default: false]
   -i, --depth    Maximum depth if you have performance issues (not everywhere
                  yet: only on existing mirrors and watch scenario)
                                                     [number] [default: Infinity]
   -v, --verbose  Moar output                          [boolean] [default: false]
+
+copyright 2016
 ```
 
 ### In your `package.json`
