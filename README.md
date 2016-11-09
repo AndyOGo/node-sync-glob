@@ -65,6 +65,7 @@ Make sure that your globs are not being parsed by your shell by properly escapin
 
 ## Credit/Inspiration
 
-This package was inspired by [`node-sync-files`](https://github.com/byteclubfr/node-sync-files).
+This package was mainly inspired by [`node-sync-files`](https://github.com/byteclubfr/node-sync-files).
 I mainly kept the API as is, but enhanced the file matching by utilizing powerful globs.
 Additionally it is a complete rewrite in ES6 and it does not suffer from outdated dependencies.
+Some fancy features like `--transform` is inspired by [`cpx`](https://www.npmjs.com/package/cpx)
