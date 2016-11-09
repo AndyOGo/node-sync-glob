@@ -21,6 +21,9 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .alias('i', 'depth')
   .default('depth', Infinity)
   .describe('depth', 'Maximum depth if you have performance issues (not everywhere yet: only on existing mirrors and watch scenario)')
+  .string('transform')
+  .alias('t', 'transform')
+  .describe('transform', 'A module name to transform each file. sync-glob lookups the specified name via "require()".')
   .boolean('verbose')
   .alias('v', 'verbose')
   .default('verbose', false)
@@ -57,6 +60,7 @@ syncGlob(sources, target, {
   watch: argv.watch,
   delete: argv.delete,
   depth: argv.depth || Infinity,
+  transform: argv.transform,
 }, (event, data) => {
   const priority = notifyPriority[event] || 'low'
 

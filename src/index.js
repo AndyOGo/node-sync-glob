@@ -1,5 +1,6 @@
 /* globals process */
 
+import path from 'path'
 import chokidar from 'chokidar'
 
 import globBase from './lib/glob-base'
@@ -27,6 +28,18 @@ const syncGlob = (sources, target, options, notify) => {
   if (typeof options.depth !== 'number' || isNaN(options.depth)) {
     notify('error', 'Expected valid number for option "depth"')
     return false
+  }
+
+  if (options.transform) {
+    let transformPath = options.transform
+
+    try {
+      require.resolve(transformPath)
+    } catch(e) {
+      transformPath = path.join(process.cwd(), transformPath)
+    }
+
+    options.transform = require(transformPath)
   }
 
   // Initial mirror
