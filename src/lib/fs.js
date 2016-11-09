@@ -18,7 +18,7 @@ export const copy = (source, target, options, notify) => {
 
         notify('copy', [source, newTarget])
 
-        fs.writeFileSync(newTarget, data || transformed)
+        fs.writeFileSync(newTarget, data)
       } else {
         notify('copy', [source, target])
         fs.copySync(source, target)
