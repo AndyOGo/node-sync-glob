@@ -60,6 +60,7 @@ syncGlob(sources, target, {
   watch: argv.watch,
   delete: argv.delete,
   depth: argv.depth || Infinity,
+  transform: argv.transform,
 }, (event, data) => {
   const priority = notifyPriority[event] || 'low'
 
