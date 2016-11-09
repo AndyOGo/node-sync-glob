@@ -15,6 +15,10 @@
     "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp",
     "pretest:dir": "npm run build",
     "test:dir": "node bin/sync-glob.js -w -v test/@org '!test/**/b.txt' tmp/testdir",
+    "pretest:transform": "npm run build",
+    "test:transform": "node bin/sync-glob.js -v -d -t test/transform.js 'test/**/*' tmp/transform",
+    "pretest:file": "npm run build",
+    "test:file": "node bin/sync-glob.js -v -d 'test/b.txt' 'test/@org/b.txt' 'test/bar/c*' 'test/foo/*.txt' tmp/file",
     "prepublish": "npm run build"
   },
   "bin": {
