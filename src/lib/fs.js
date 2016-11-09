@@ -3,14 +3,22 @@ import path from 'path'
 
 const cwd = process.cwd()
 
-export const copy = (source, target, notify) => {
+export const copy = (source, target, options, notify) => {
   notify('copy', [source, target])
 
   try {
     const sourceStat = fs.statSync(source)
 
     if (sourceStat.isFile()) {
-      fs.copySync(source, target)
+      if (options.transform) {
+        const transform = options.transform
+        const file = fs.readFileSync(source)
+        const transformed = transform(file, target)
+
+        fs.writeFileSync(transformed.target || target, transformed.data || transformed)
+      } else {
+        fs.copySync(source, target)
+      }
     } else if (sourceStat.isDirectory()) {
       fs.ensureDirSync(target)
     }

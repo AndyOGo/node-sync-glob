@@ -1,7 +1,7 @@
 import { copy, deleteExtra, resolveTarget } from './fs'
 
 export const watcherCopy = (target, options, notify) => (file, stats) => {
-  copy(file, resolveTarget(file, target, options), notify)
+  copy(file, resolveTarget(file, target, options), options, notify)
 }
 
 export const watcherDestroy = (target, options, notify) => (file) => {
