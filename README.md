@@ -19,15 +19,17 @@ Commands:
   target   Destination folder for mirrored files
 
 Options:
-  --version      Show version number                                   [boolean]
-  --help         Show help                                             [boolean]
-  -d, --delete   Delete extraneous files from target   [boolean] [default: true]
-  -w, --watch    Watch changes in sources and keep target in sync
+  --version        Show version number                                 [boolean]
+  --help           Show help                                           [boolean]
+  -d, --delete     Delete extraneous files from target [boolean] [default: true]
+  -w, --watch      Watch changes in sources and keep target in sync
                                                       [boolean] [default: false]
-  -i, --depth    Maximum depth if you have performance issues (not everywhere
-                 yet: only on existing mirrors and watch scenario)
+  -i, --depth      Maximum depth if you have performance issues (not everywhere
+                   yet: only on existing mirrors and watch scenario)
                                                     [number] [default: Infinity]
-  -v, --verbose  Moar output                          [boolean] [default: false]
+  -t, --transform  A module name to transform each file. sync-glob lookups the
+                   specified name via "require()".                      [string]
+  -v, --verbose    Moar output                        [boolean] [default: false]
 
 copyright 2016
 ```
