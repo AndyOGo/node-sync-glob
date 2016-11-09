@@ -3,6 +3,8 @@ import path from 'path'
 
 import isGlob from './is-glob'
 
+const reDir = /\/|\\/
+
 const globBase = (glob) => {
   if (!Array.isArray(glob)) {
     glob = [glob]
@@ -14,12 +16,16 @@ const globBase = (glob) => {
     }
 
     const index = isGlob(pattern)
+    let isDir
 
     if (index > -1) {
+      const charBeforeGlob = pattern.charAt(index - 1)
+      isDir = reDir.test(charBeforeGlob)
+
       pattern = pattern.substring(0, index)
     }
 
-    if (index > -1 || fs.statSync(pattern).isFile()) {
+    if (!isDir || index === -1 && fs.statSync(pattern).isFile()) {
       pattern = path.dirname(pattern)
     }
 
