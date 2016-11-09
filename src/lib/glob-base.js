@@ -1,3 +1,6 @@
+import fs from 'fs'
+import path from 'path'
+
 import isGlob from './is-glob'
 
 const globBase = (glob) => {
@@ -14,6 +17,10 @@ const globBase = (glob) => {
 
     if (index > -1) {
       pattern = pattern.substring(0, index)
+    }
+
+    if (index > -1 || fs.statSync(pattern).isFile()) {
+      pattern = path.dirname(pattern)
     }
 
     base.push(pattern)
