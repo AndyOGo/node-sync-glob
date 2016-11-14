@@ -1,6 +1,6 @@
 {
   "name": "sync-glob",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Synchronize files and folders locally by glob patterns, watch option included.",
   "main": "index.js",
   "scripts": {
