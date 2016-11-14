@@ -35,7 +35,7 @@ const syncGlob = (sources, target, options, notify) => {
 
     try {
       require.resolve(transformPath)
-    } catch(e) {
+    } catch (e) {
       transformPath = path.join(process.cwd(), transformPath)
     }
 

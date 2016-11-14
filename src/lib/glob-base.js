@@ -16,6 +16,7 @@ const globBase = (glob) => {
     }
 
     const index = isGlob(pattern)
+    const foundGlob = index > -1
     let isDir
 
     if (index > -1) {
@@ -25,7 +26,8 @@ const globBase = (glob) => {
       pattern = pattern.substring(0, index)
     }
 
-    if (!isDir || index === -1 && fs.statSync(pattern).isFile()) {
+    if (foundGlob && !isDir ||
+      !foundGlob && fs.statSync(pattern).isFile()) {
       pattern = path.dirname(pattern)
     }
 
