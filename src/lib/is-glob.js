@@ -1,5 +1,5 @@
-const reGlobFirstChar = /^\{.*}|\*\*?|\[.*]|[!?+*@]\(.*\)|\?/
-const reGlob = /(?!\\).(:?\{.*}|\*\*?|\[.*]|[!?+*@]\(.*\)|\?)/
+const reGlobFirstChar = /^\{.*[^\\]}|^\*\*?|^\[.*[^\\]]|^[!?+*@]\(.*[^\\]\)|^\?/
+const reGlob = /(?!\\).(:?\{.*[^\\]}|\*\*?|\[.*[^\\]]|[!?+*@]\(.*[^\\]\)|\?)/
 
 const isGlob = (str) => {
   const match = reGlob.exec(str)
@@ -20,5 +20,7 @@ const isGlob = (str) => {
 
   return index
 }
+
+
 
 export default isGlob
