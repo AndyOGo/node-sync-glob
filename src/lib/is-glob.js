@@ -21,6 +21,4 @@ const isGlob = (str) => {
   return index
 }
 
-
-
 export default isGlob
