@@ -20,13 +20,19 @@ export const copy = (source, target, options, notify) => {
 
         fs.mkdirsSync(path.dirname(newTarget))
         fs.writeFileSync(newTarget, data)
+
+        notify('copied', [source, newTarget])
       } else {
         notify('copy', [source, target])
         fs.copySync(source, target)
+
+        notify('copied', [source, target])
       }
     } else if (sourceStat.isDirectory()) {
       notify('copy', [source, target])
       fs.ensureDirSync(target)
+
+      notify('copied', [source, target])
     }
     return true
   } catch (e) {
