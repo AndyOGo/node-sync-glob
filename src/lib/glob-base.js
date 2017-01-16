@@ -21,16 +21,18 @@ const globBase = (glob) => {
 
     if (index > -1) {
       const charBeforeGlob = pattern.charAt(index - 1)
-      isDir = reDir.test(charBeforeGlob)
 
+      isDir = reDir.test(charBeforeGlob)
       pattern = pattern.substring(0, index)
     }
 
-    if (foundGlob && !isDir ||
-      !foundGlob && fs.statSync(pattern).isFile()) {
-      pattern = path.dirname(pattern)
-    } else if (reDir.test(pattern.charAt(pattern.length - 1))) {
-      pattern = pattern.slice(0, -1)
+    if (pattern) {
+      if (foundGlob && !isDir ||
+        !foundGlob && fs.statSync(pattern).isFile()) {
+        pattern = path.dirname(pattern)
+      } else if (reDir.test(pattern.charAt(pattern.length - 1))) {
+        pattern = pattern.slice(0, -1)
+      }
     }
 
     base.push(pattern)
