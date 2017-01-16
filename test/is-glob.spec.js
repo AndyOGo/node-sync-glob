@@ -21,6 +21,11 @@ describe('lib/is-glib', () => {
       expect(isGloby('/?.js')).toBe(true)
     })
 
+    it('should match braced sections', () => {
+      expect(isGloby('{a,b}')).toBe(true)
+      expect(isGloby('abc/{a,b}')).toBe(true)
+    })
+
     it('should match range wildcards', () => {
       expect(isGloby('[a-z]')).toBe(true)
       expect(isGloby('[a-z].js')).toBe(true)
@@ -54,6 +59,14 @@ describe('lib/is-glib', () => {
       expect(isGloby('\\?')).toBe(false)
       expect(isGloby('\\?.js')).toBe(false)
       expect(isGloby('/\\?.js')).toBe(false)
+    })
+
+    it('should not match escaped braced sections', () => {
+      expect(isGloby('\\{a,b}')).toBe(false)
+      expect(isGloby('abc/\\{a,b}')).toBe(false)
+
+      expect(isGloby('{a,b\\}')).toBe(false)
+      expect(isGloby('abc/{a,b\\}')).toBe(false)
     })
 
     it('should not match escaped range wildcards', () => {
