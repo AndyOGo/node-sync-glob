@@ -29,6 +29,8 @@ const globBase = (glob) => {
     if (foundGlob && !isDir ||
       !foundGlob && fs.statSync(pattern).isFile()) {
       pattern = path.dirname(pattern)
+    } else if (reDir.test(pattern.charAt(pattern.length - 1))) {
+      pattern = pattern.slice(0, -1)
     }
 
     base.push(pattern)
