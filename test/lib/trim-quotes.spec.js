@@ -1,4 +1,4 @@
-import trimQuotes from '../src/lib/trim-quotes'
+import trimQuotes from '../../src/lib/trim-quotes'
 
 describe('lib/trim-quotes', () => {
   it('should trim single quotes', () => {

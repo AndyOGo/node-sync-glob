@@ -1,4 +1,4 @@
-import isGlob from '../src/lib/is-glob'
+import isGlob from '../../src/lib/is-glob'
 
 const isGloby = value => !!~isGlob(value)
 

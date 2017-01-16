@@ -1,4 +1,4 @@
-import globBase from '../src/lib/glob-base'
+import globBase from '../../src/lib/glob-base'
 
 describe('lib/glob-base', () => {
   it('should resolve the base path of globs', () => {
