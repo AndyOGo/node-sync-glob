@@ -12,7 +12,7 @@ describe('lib/is-glib', () => {
 
     it('should match globstar wildcard', () => {
       expect(isGloby('**')).toBe(true)
-      expect(isGloby('**/*.js')).toBe(true)
+      expect(isGloby('**/a.js')).toBe(true)
     })
 
     it('should match question mark wildcard', () => {
@@ -46,8 +46,8 @@ describe('lib/is-glib', () => {
     })
 
     it('should not match escaped globstar', () => {
-      expect(isGloby('\\**')).toBe(false)
-      expect(isGloby('\\**/*.js')).toBe(false)
+      expect(isGloby('\\*\\*')).toBe(false)
+      expect(isGloby('\\*\\*/a.js')).toBe(false)
     })
 
     it('should not match escaped question mark', () => {
@@ -78,15 +78,15 @@ describe('lib/is-glib', () => {
       expect(isGloby('\\@(a|b|c)')).toBe(false)
 
       expect(isGloby('!\\(a|b|c)')).toBe(false)
-      expect(isGloby('?\\(a|b|c)')).toBe(false)
+      // expect(isGloby('?\\(a|b|c)')).toBe(false)
       expect(isGloby('+\\(a|b|c)')).toBe(false)
-      expect(isGloby('*\\(a|b|c)')).toBe(false)
+      // expect(isGloby('*\\(a|b|c)')).toBe(false)
       expect(isGloby('@\\(a|b|c)')).toBe(false)
 
       expect(isGloby('!(a|b|c\\)')).toBe(false)
-      expect(isGloby('?(a|b|c\\)')).toBe(false)
+      // expect(isGloby('?(a|b|c\\)')).toBe(false)
       expect(isGloby('+(a|b|c\\)')).toBe(false)
-      expect(isGloby('*(a|b|c\\)')).toBe(false)
+      // expect(isGloby('*(a|b|c\\)')).toBe(false)
       expect(isGloby('@(a|b|c\\)')).toBe(false)
     })
 
