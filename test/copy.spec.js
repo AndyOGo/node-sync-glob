@@ -59,4 +59,9 @@ describe('node-sync-glob', () => {
   xit('should copy an array of directories (without contents)', (done) => {
     syncGlob(['test/mock/foo', 'test/mock/bar/', 'test/mock/@org'], 'tmp', {}, compare(done))
   })
+
+  it('should copy globs', (done) => {
+    syncGlob('test/mock/@org/*.txt', 'tmp', {}, compare(done))
+    syncGlob('test/mock/foo/*.txt', 'tmp', {}, compare(done))
+  })
 })
