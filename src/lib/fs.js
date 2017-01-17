@@ -30,7 +30,7 @@ export const copy = (source, target, options, notify) => {
       }
     } else if (sourceStat.isDirectory()) {
       notify('copy', [source, target])
-      fs.ensureDirSync(path.join(target, source.split(path.sep).pop()))
+      fs.ensureDirSync(target)
 
       notify('copied', [source, target])
     }
