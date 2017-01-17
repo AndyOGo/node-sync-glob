@@ -37,7 +37,7 @@ describe('node-sync-glob', () => {
     fs.removeSync('tmp')
   })
 
-  afterEach(() => {
+  afterAll(() => {
     fs.removeSync('tmp')
   })
 
