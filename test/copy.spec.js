@@ -3,42 +3,60 @@ import dirCompare from 'dir-compare'
 
 import syncGlob from '../src/index'
 
+const compare = done => (event, data) => {
+  if (event === 'copied') {
+    const [source, target] = data
+    const res = dirCompare.compareSync(source, target, { compareSize: true, compareContent: true })
+
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
+
+    done()
+  }
+}
+
+const compareDir = (done, source, target) => (event) => {
+  if (event === 'mirrored') {
+    const res = dirCompare.compareSync(source, target, { compareSize: true, compareContent: true })
+
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
+
+    done()
+  }
+}
+
 describe('node-sync-glob', () => {
   beforeEach(() => {
     fs.removeSync('tmp')
   })
 
+  afterEach(() => {
+    fs.removeSync('tmp')
+  })
+
   it('should copy a file', (done) => {
-    syncGlob('test/mock/a.txt', 'tmp', {}, (event, data) => {
-      const isCopy = event === 'copy'
-      const isCopied = event === 'copied'
-      const isNoDelete = event === 'no-delete'
-
-      expect(isCopy || isCopied || isNoDelete).toBe(true)
-
-      if (isCopied) {
-        const res = dirCompare.compareSync(data[0], data[1], { compareSize: true, compareContent: true })
-
-        expect(res.differences).toBe(0)
-        expect(res.differencesFiles).toBe(0)
-        expect(res.distinctFiles).toBe(0)
-        expect(res.differencesDirs).toBe(0)
-        expect(res.distinctDirs).toBe(0)
-
-        done()
-      }
-    })
+    syncGlob('test/mock/a.txt', 'tmp', {}, compare(done))
   })
 
-  it('should copy an array of files', () => {
-
+  it('should copy an array of files', (done) => {
+    syncGlob(['test/mock/a.txt', 'test/mock/b.txt'], 'tmp', {}, compare(done))
   })
 
-  it('should copy a directory', () => {
-
+  it('should copy a directory (without contents)', (done) => {
+    syncGlob('test/mock/foo', 'tmp', {}, compareDir(done, 'test/mock/foo', 'tmp'))
+    syncGlob('test/mock/foo/', 'tmp', {}, compareDir(done, 'test/mock/foo/', 'tmp'))
+    syncGlob('test/mock/@org', 'tmp', {}, compareDir(done, 'test/mock/@org', 'tmp'))
+    syncGlob('test/mock/@org/', 'tmp', {}, compareDir(done, 'test/mock/@org/', 'tmp'))
   })
 
-  it('should copy an array of directories', () => {
-
+  xit('should copy an array of directories (without contents)', (done) => {
+    syncGlob(['test/mock/foo', 'test/mock/bar/', 'test/mock/@org'], 'tmp', {}, compare(done))
   })
 })
