@@ -19,6 +19,10 @@ const mirror = (sources, target, options, notify) => {
     }
   }
 
+  if (flag) {
+    notify('mirrored')
+  }
+
   return flag
 }
 
