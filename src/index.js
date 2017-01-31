@@ -44,6 +44,7 @@ const syncGlob = (sources, target, options, notify) => {
 
   // Initial mirror
   const mirrored = mirror(sources, target, options, notify, 0)
+  let watcher
 
   if (!mirrored) {
     notify('error', 'Initial mirror failed')
@@ -52,7 +53,7 @@ const syncGlob = (sources, target, options, notify) => {
 
   if (options.watch) {
     // Watcher to keep in sync from that
-    const watcher = chokidar.watch(sources, {
+    watcher = chokidar.watch(sources, {
       persistent: true,
       depth: options.depth,
       ignoreInitial: true,
@@ -68,10 +69,13 @@ const syncGlob = (sources, target, options, notify) => {
     process.on('SIGINT', stopWatching)
     process.on('SIGQUIT', stopWatching)
     process.on('SIGTERM', stopWatching)
+  }
 
-    function stopWatching() {
-      watcher.close()
-    }
+  return stopWatching
+
+  function stopWatching() {
+    watcher.close()
+    watcher = null
   }
 }
 
