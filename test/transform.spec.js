@@ -1,0 +1,3 @@
+describe('node-sync-glob', () => {
+
+})
