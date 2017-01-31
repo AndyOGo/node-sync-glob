@@ -1,36 +1,8 @@
 import fs from 'fs-extra'
-import dirCompare from 'dir-compare'
 
 import syncGlob from '../src/index'
+import { compare, compareDir } from './helpers'
 
-const compare = done => (event, data) => {
-  if (event === 'copied') {
-    const [source, target] = data
-    const res = dirCompare.compareSync(source, target, { compareSize: true, compareContent: true })
-
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
-
-    done()
-  }
-}
-
-const compareDir = (done, source, target) => (event) => {
-  if (event === 'mirrored') {
-    const res = dirCompare.compareSync(source, target, { compareSize: true, compareContent: true })
-
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
-
-    done()
-  }
-}
 
 describe('node-sync-glob', () => {
   beforeEach(() => {
