@@ -1,4 +1,16 @@
+import fs from 'fs-extra'
 import dirCompare from 'dir-compare'
+
+export const setup = () => {
+  beforeEach(() => {
+    fs.removeSync('tmp')
+    fs.copySync('test/mock', 'tmp/mock')
+  })
+
+  afterAll(() => {
+    fs.removeSync('tmp')
+  })
+}
 
 export const compare = (done, options) => (event, data) => {
   if (event === 'copied') {

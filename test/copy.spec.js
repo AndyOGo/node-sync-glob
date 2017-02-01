@@ -1,39 +1,30 @@
-import fs from 'fs-extra'
-
 import syncGlob from '../src/index'
-import { compare, compareDir } from './helpers'
+import { setup, compare, compareDir } from './helpers'
 
+setup()
 
 describe('node-sync-glob', () => {
-  beforeEach(() => {
-    fs.removeSync('tmp')
-  })
-
-  afterAll(() => {
-    fs.removeSync('tmp')
-  })
-
   it('should copy a file', (done) => {
-    syncGlob('test/mock/a.txt', 'tmp', {}, compare(done))
+    syncGlob('tmp/mock/a.txt', 'tmp/copy', {}, compare(done))
   })
 
   it('should copy an array of files', (done) => {
-    syncGlob(['test/mock/a.txt', 'test/mock/b.txt'], 'tmp', {}, compare(done))
+    syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/copy', {}, compare(done))
   })
 
   it('should copy a directory (without contents)', (done) => {
-    syncGlob('test/mock/foo', 'tmp', {}, compareDir(done, 'test/mock/foo', 'tmp'))
-    syncGlob('test/mock/foo/', 'tmp', {}, compareDir(done, 'test/mock/foo/', 'tmp'))
-    syncGlob('test/mock/@org', 'tmp', {}, compareDir(done, 'test/mock/@org', 'tmp'))
-    syncGlob('test/mock/@org/', 'tmp', {}, compareDir(done, 'test/mock/@org/', 'tmp'))
+    syncGlob('tmp/mock/foo', 'tmp/copy', {}, compareDir(done, 'tmp/mock/foo', 'tmp/copy'))
+    syncGlob('tmp/mock/foo/', 'tmp/copy', {}, compareDir(done, 'tmp/mock/foo/', 'tmp/copy'))
+    syncGlob('tmp/mock/@org', 'tmp/copy', {}, compareDir(done, 'tmp/mock/@org', 'tmp/copy'))
+    syncGlob('tmp/mock/@org/', 'tmp/copy', {}, compareDir(done, 'tmp/mock/@org/', 'tmp/copy'))
   })
 
   xit('should copy an array of directories (without contents)', (done) => {
-    syncGlob(['test/mock/foo', 'test/mock/bar/', 'test/mock/@org'], 'tmp', {}, compare(done))
+    syncGlob(['tmp/mock/foo', 'tmp/mock/bar/', 'tmp/mock/@org'], 'tmp/copy', {}, compare(done))
   })
 
   it('should copy globs', (done) => {
-    syncGlob('test/mock/@org/*.txt', 'tmp', {}, compare(done))
-    syncGlob('test/mock/foo/*.txt', 'tmp', {}, compare(done))
+    syncGlob('tmp/mock/@org/*.txt', 'tmp/copy', {}, compare(done))
+    syncGlob('tmp/mock/foo/*.txt', 'tmp/copy', {}, compare(done))
   })
 })
