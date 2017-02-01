@@ -1,42 +1,55 @@
 import fs from 'fs-extra'
 import dirCompare from 'dir-compare'
 
-export const setup = () => {
-  beforeEach(() => {
-    fs.removeSync('tmp')
-    fs.copySync('test/mock', 'tmp/mock')
-  })
-
-  afterAll(() => {
-    fs.removeSync('tmp')
-  })
+export const beforeEachSpec = () => {
+  fs.removeSync('tmp')
+  fs.copySync('test/mock', 'tmp/mock')
+  console.log('before each')
 }
 
-export const compare = (done, options) => (event, data) => {
-  if (event === 'copied') {
-    const [source, target] = data
-    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+export const afterAllSpecs = () => {
+  fs.removeSync('tmp')
+}
 
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
+export const compare = (done, options) => {
+  let isWatching = false
 
-    done()
+  return function (event, data) {
+    if (event === 'watch') {
+      isWatching = true
+      done(event)
+    } else if ((event === 'copied' || isWatching) && Array.isArray(data)) {
+      const [source, target] = data
+      const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+
+      expect(res.differences).toBe(0)
+      expect(res.differencesFiles).toBe(0)
+      expect(res.distinctFiles).toBe(0)
+      expect(res.differencesDirs).toBe(0)
+      expect(res.distinctDirs).toBe(0)
+
+      done()
+    }
   }
 }
 
-export const compareDir = (done, source, target, options) => (event) => {
-  if (event === 'mirrored') {
-    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+export const compareDir = (done, source, target, options) => {
+  let isWatching = false
 
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
+  return (event) => {
+    if (event === 'watch') {
+      isWatching = true
+      done(event)
+    } else if (event === 'mirrored' || isWatching) {
+      const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-    done()
+      expect(res.differences).toBe(0)
+      expect(res.differencesFiles).toBe(0)
+      expect(res.distinctFiles).toBe(0)
+      expect(res.differencesDirs).toBe(0)
+      expect(res.distinctDirs).toBe(0)
+
+      done()
+    }
   }
 }

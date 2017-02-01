@@ -1,42 +1,78 @@
 import fs from 'fs-extra'
 
 import syncGlob from '../src/index'
-import { setup, compare, compareDir } from './helpers'
+import { beforeEachSpec, afterAllSpecs, compare, compareDir } from './helpers'
 
 const watch = true
 
-setup()
-
 describe('node-sync-glob', () => {
+  beforeEach(beforeEachSpec)
+  afterAll(afterAllSpecs)
+
   it('should sync a file', (done) => {
     let hasChanged = false
 
-    const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, compare(() => {
-      if (!hasChanged) {
-        hasChanged = true
+    const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, compare((event) => {
+      console.log(`${hasChanged} ${event}`)
 
+      if (event === 'watch') {
         setImmediate(() => {
+          hasChanged = true
           fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
         })
-      } else {
+
+        return
+      }
+
+      if (hasChanged) {
         close()
         done()
       }
     }))
-  }, 10000)
+  })
 
   it('should sync an array of files', (done) => {
-    let hasChanged = 0
+    let hasChanged = false
 
-    const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, compare(() => {
-      if (hasChanged++ === 1) {
+    const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, compare((event) => {
+      console.log(`${hasChanged} ${event}`)
+
+      if (event === 'watch') {
         setImmediate(() => {
+          hasChanged = true
           fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
         })
-      } else if (hasChanged > 1) {
+
+        return
+      }
+
+      if (hasChanged) {
         close()
         done()
       }
     }))
-  }, 10000)
+  })
+
+  it('should sync a directory', (done) => {
+    let hasChanged = false
+
+    const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, compareDir((event) => {
+      console.log(`${hasChanged} ${event}`)
+
+      if (event === 'watch') {
+        setImmediate(() => {
+          hasChanged = true
+          fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
+          console.log('appended')
+        })
+
+        return
+      }
+
+      if (hasChanged) {
+        close()
+        done()
+      }
+    }, 'tmp/mock/foo', 'tmp/sync'))
+  })
 })

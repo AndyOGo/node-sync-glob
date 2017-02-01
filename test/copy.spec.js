@@ -1,9 +1,10 @@
 import syncGlob from '../src/index'
-import { setup, compare, compareDir } from './helpers'
-
-setup()
+import { beforeEachSpec, afterAllSpecs, compare, compareDir } from './helpers'
 
 describe('node-sync-glob', () => {
+  beforeEach(beforeEachSpec)
+  afterAll(afterAllSpecs)
+
   it('should copy a file', (done) => {
     syncGlob('tmp/mock/a.txt', 'tmp/copy', {}, compare(done))
   })
