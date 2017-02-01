@@ -74,8 +74,10 @@ const syncGlob = (sources, target, options, notify) => {
   return stopWatching
 
   function stopWatching() {
-    watcher.close()
-    watcher = null
+    if (watcher) {
+      watcher.close()
+      watcher = null
+    }
   }
 }
 
