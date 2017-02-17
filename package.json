@@ -11,7 +11,7 @@
     "help": "node bin/sync-glob.js --help",
     "preversion": "npm run build",
     "version": "node bin/sync-glob.js --version",
-    "test": "jest --runInBand --config ./.jestrc.json",
+    "test": "jest --runInBand --verbose --config ./.jestrc.json",
     "xpretest": "npm run build",
     "xtest": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp",
     "pretest:dir": "npm run build",
