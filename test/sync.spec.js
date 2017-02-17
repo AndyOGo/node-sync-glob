@@ -13,8 +13,6 @@ describe('node-sync-glob', () => {
     let hasChanged = false
 
     const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, compare((event) => {
-      console.log(`${hasChanged} ${event}`)
-
       if (event === 'watch') {
         setImmediate(() => {
           hasChanged = true
@@ -35,8 +33,6 @@ describe('node-sync-glob', () => {
     let hasChanged = false
 
     const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, compare((event) => {
-      console.log(`${hasChanged} ${event}`)
-
       if (event === 'watch') {
         setImmediate(() => {
           hasChanged = true
@@ -57,13 +53,10 @@ describe('node-sync-glob', () => {
     let hasChanged = false
 
     const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, compareDir((event) => {
-      console.log(`${hasChanged} ${event}`)
-
       if (event === 'watch') {
         setImmediate(() => {
           hasChanged = true
           fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
-          console.log('appended')
         })
 
         return

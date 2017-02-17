@@ -4,7 +4,6 @@ import dirCompare from 'dir-compare'
 export const beforeEachSpec = () => {
   fs.removeSync('tmp')
   fs.copySync('test/mock', 'tmp/mock')
-  console.log('before each')
 }
 
 export const afterAllSpecs = () => {
@@ -18,7 +17,7 @@ export const compare = (done, options) => {
     if (event === 'watch') {
       isWatching = true
       done(event)
-    } else if ((event === 'copied' || isWatching) && Array.isArray(data)) {
+    } else if ((event === 'copied' || isWatching && event) && Array.isArray(data)) {
       const [source, target] = data
       const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
@@ -28,7 +27,7 @@ export const compare = (done, options) => {
       expect(res.differencesDirs).toBe(0)
       expect(res.distinctDirs).toBe(0)
 
-      done()
+      done(event)
     }
   }
 }
@@ -40,7 +39,7 @@ export const compareDir = (done, source, target, options) => {
     if (event === 'watch') {
       isWatching = true
       done(event)
-    } else if (event === 'mirrored' || isWatching) {
+    } else if (event === 'mirrored' || isWatching && event) {
       const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
       expect(res.differences).toBe(0)
@@ -49,7 +48,7 @@ export const compareDir = (done, source, target, options) => {
       expect(res.differencesDirs).toBe(0)
       expect(res.distinctDirs).toBe(0)
 
-      done()
+      done(event)
     }
   }
 }
