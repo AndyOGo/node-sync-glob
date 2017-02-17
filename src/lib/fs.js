@@ -16,20 +16,16 @@ export const copy = (source, target, options, notify) => {
         const data = isObject && transformed.data || transformed
         const newTarget = isObject && transformed.target || target
 
-        notify('copy', [source, newTarget])
-
         fs.mkdirsSync(path.dirname(newTarget))
         fs.writeFileSync(newTarget, data)
 
         notify('copied', [source, newTarget])
       } else {
-        notify('copy', [source, target])
         fs.copySync(source, target)
 
         notify('copied', [source, target])
       }
     } else if (sourceStat.isDirectory()) {
-      notify('copy', [source, target])
       fs.ensureDirSync(target)
 
       notify('copied', [source, target])
