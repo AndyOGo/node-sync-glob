@@ -10,45 +10,86 @@ export const afterAllSpecs = () => {
   fs.removeSync('tmp')
 }
 
-export const compare = (done, options) => {
-  let isWatching = false
+export const awaitMatch = (...args) => {
+  if (args.length % 2) {
+    throw new Error('Args arity must be sets of two')
+  }
 
-  return function (event, data) {
-    if (event === 'watch') {
-      isWatching = true
-      done(event)
-    } else if ((event === 'copied' || isWatching && event) && Array.isArray(data)) {
-      const [source, target] = data
-      const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+  const normalizeMatch = (match) => {
+    if (!Array.isArray(match)) {
+      match = [match]
+    }
 
-      expect(res.differences).toBe(0)
-      expect(res.differencesFiles).toBe(0)
-      expect(res.distinctFiles).toBe(0)
-      expect(res.differencesDirs).toBe(0)
-      expect(res.distinctDirs).toBe(0)
+    return match.reduce((matches, value) => {
+      if (typeof value === 'object') {
+        Object.keys(value).forEach((key) => {
+          const count = value[key]
 
-      done(event)
+          for (let i = 0; i < count; i++) {
+            matches.push(key)
+          }
+        })
+      } else {
+        matches.push(value)
+      }
+
+      return matches
+    }, [])
+  }
+  let match = normalizeMatch(args.shift())
+  let callback = args.shift()
+
+  return (event, data) => {
+    if (!match.length && !args.length) {
+      return
+    }
+
+    const index = match.indexOf(event)
+
+    if (index > -1) {
+      match.splice(index, 1)
+    }
+
+    if (match.length === 0) {
+      callback(event, data)
+
+      if (args.length) {
+        match = normalizeMatch(args.shift())
+        callback = args.shift()
+      }
     }
   }
 }
 
-export const compareDir = (done, source, target, options) => {
-  let isWatching = false
+export const compare = (done, options) => (event, data) => {
+  if (event && Array.isArray(data)) {
+    const [source, target] = data
+    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-  return (event) => {
-    if (event === 'watch') {
-      isWatching = true
-      done(event)
-    } else if (event === 'mirrored' || isWatching && event) {
-      const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
 
-      expect(res.differences).toBe(0)
-      expect(res.differencesFiles).toBe(0)
-      expect(res.distinctFiles).toBe(0)
-      expect(res.differencesDirs).toBe(0)
-      expect(res.distinctDirs).toBe(0)
+    if (done) {
+      done()
+    }
+  }
+}
 
-      done(event)
+export const compareDir = (done, source, target, options) => (event) => {
+  if (event) {
+    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
+
+    if (done) {
+      done()
     }
   }
 }
