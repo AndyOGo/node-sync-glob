@@ -1,3 +1,4 @@
 {
-  "testEnvironment": "node"
+  "testEnvironment": "node",
+  "cacheDirectory": "/tmp/jest/foo/<path>"
 }
