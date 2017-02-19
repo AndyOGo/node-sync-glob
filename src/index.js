@@ -10,7 +10,8 @@ import { watcherCopy, watcherDestroy, watcherError } from './lib/watcher'
 
 const defaults = {
   watch: false,
-  delete: false,
+  delete: true,
+  deleteInitial: false,
   depth: Infinity,
 }
 

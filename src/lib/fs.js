@@ -38,9 +38,9 @@ export const copy = (source, target, options, notify) => {
 }
 
 export const destroy = (fileordir, notify) => {
-  notify('remove', fileordir)
   try {
     fs.removeSync(fileordir)
+    notify('removed', fileordir)
     return true
   } catch (e) {
     notify('error', e)
