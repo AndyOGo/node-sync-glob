@@ -15,9 +15,13 @@ describe('node-sync-glob', () => {
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
       },
       'copied', compare(() => {
+        fs.removeSync('tmp/mock/a.txt')
+      }),
+      'removed', () => {
+        expect(fs.existsSync('tmp/sync/a.txt')).toBe(false)
         close()
         done()
-      })
+      }
     ))
   })
 
@@ -27,9 +31,14 @@ describe('node-sync-glob', () => {
         fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
       },
       'copied', compare(() => {
+        fs.removeSync('tmp/mock/b.txt')
+      }),
+      'removed', () => {
+        expect(fs.existsSync('tmp/sync/a.txt')).toBe(true)
+        expect(fs.existsSync('tmp/sync/b.txt')).toBe(false)
         close()
         done()
-      })
+      }
     ))
   })
 
@@ -39,9 +48,14 @@ describe('node-sync-glob', () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
       },
       'copied', compareDir(() => {
+        fs.removeSync('tmp/mock/foo/d.txt')
+      }, 'tmp/mock/foo', 'tmp/sync'),
+      'removed', () => {
+        expect(fs.existsSync('tmp/sync/b.txt')).toBe(true)
+        expect(fs.existsSync('tmp/sync/d.txt')).toBe(false)
         close()
         done()
-      }, 'tmp/mock/foo', 'tmp/sync')
+      }
     ))
   })
 })
