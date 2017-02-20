@@ -70,6 +70,9 @@ const syncGlob = (sources, target, options, notify) => {
       .on('unlink', watcherDestroy(target, options, notify))
       .on('unlinkDir', watcherDestroy(target, options, notify))
       .on('error', watcherError(options, notify))
+      .on('all', (...args) => {
+        console.log(`***CHOKIDAR: ${args.join(', ')}***`)
+      })
 
     process.on('SIGINT', stopWatching)
     process.on('SIGQUIT', stopWatching)
