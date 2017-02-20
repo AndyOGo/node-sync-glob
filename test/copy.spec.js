@@ -1,7 +1,7 @@
 import syncGlob from '../src/index'
 import { beforeEachSpec, afterAllSpecs, awaitMatch, compare, compareDir } from './helpers'
 
-describe('node-sync-glob', () => {
+describe('node-sync-glob copy', () => {
   beforeEach(beforeEachSpec)
   afterAll(afterAllSpecs)
 

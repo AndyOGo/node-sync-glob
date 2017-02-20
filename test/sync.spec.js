@@ -5,7 +5,7 @@ import { beforeEachSpec, afterAllSpecs, awaitMatch, compare, compareDir } from '
 
 const watch = true
 
-describe('node-sync-glob', () => {
+describe('node-sync-glob watch', () => {
   beforeEach(beforeEachSpec)
   afterAll(afterAllSpecs)
 
