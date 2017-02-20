@@ -67,11 +67,15 @@ export const compare = (done, options) => (event, data) => {
     const [source, target] = data
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
+    try {
+      expect(res.differences).toBe(0)
+      expect(res.differencesFiles).toBe(0)
+      expect(res.distinctFiles).toBe(0)
+      expect(res.differencesDirs).toBe(0)
+      expect(res.distinctDirs).toBe(0)
+    } catch (err) {
+      console.log(res)
+    }
 
     if (done) {
       done()
@@ -83,11 +87,15 @@ export const compareDir = (done, source, target, options) => (event) => {
   if (event) {
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-    expect(res.differences).toBe(0)
-    expect(res.differencesFiles).toBe(0)
-    expect(res.distinctFiles).toBe(0)
-    expect(res.differencesDirs).toBe(0)
-    expect(res.distinctDirs).toBe(0)
+    try {
+      expect(res.differences).toBe(0)
+      expect(res.differencesFiles).toBe(0)
+      expect(res.distinctFiles).toBe(0)
+      expect(res.differencesDirs).toBe(0)
+      expect(res.distinctDirs).toBe(0)
+    } catch (err) {
+      console.log(res)
+    }
 
     if (done) {
       done()
