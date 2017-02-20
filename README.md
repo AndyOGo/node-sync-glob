@@ -1,5 +1,7 @@
 # node-sync-glob
 
+[![Build Status](https://travis-ci.org/AndyOGo/node-sync-glob.svg?branch=master)](https://travis-ci.org/AndyOGo/node-sync-glob)
+
 Synchronize files and folders locally by glob patterns, watch option included.
 
 ## Install
