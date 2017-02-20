@@ -74,6 +74,7 @@ export const compare = (done, options) => (event, data) => {
       expect(res.differencesDirs).toBe(0)
       expect(res.distinctDirs).toBe(0)
     } catch (err) {
+      console.log(`compare: ${source} <-> ${target}`)
       console.log(res)
     }
 
@@ -94,6 +95,7 @@ export const compareDir = (done, source, target, options) => (event) => {
       expect(res.differencesDirs).toBe(0)
       expect(res.distinctDirs).toBe(0)
     } catch (err) {
+      console.log(`compareDir: ${source} <-> ${target}`)
       console.log(res)
     }
 
