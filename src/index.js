@@ -17,9 +17,12 @@ const defaults = {
 
 const syncGlob = (sources, target, options, notify) => {
   if (!Array.isArray(sources)) {
+    // eslint-disable-next-line no-param-reassign
     sources = [sources]
   }
+  // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+  // eslint-disable-next-line no-param-reassign
   options = {
     ...defaults,
     base: globBase(sources),
@@ -40,6 +43,7 @@ const syncGlob = (sources, target, options, notify) => {
       transformPath = path.join(process.cwd(), transformPath)
     }
 
+    // eslint-disable-next-line
     options.transform = require(transformPath)
   }
 

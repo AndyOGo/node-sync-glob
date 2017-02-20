@@ -1,5 +1,6 @@
 import isGlob from '../../src/lib/is-glob'
 
+// eslint-disable-next-line no-bitwise
 const isGloby = value => !!~isGlob(value)
 
 describe('lib/is-glib', () => {

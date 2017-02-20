@@ -17,6 +17,7 @@ export const awaitMatch = (...args) => {
 
   const normalizeMatch = (match) => {
     if (!Array.isArray(match)) {
+      // eslint-disable-next-line no-param-reassign
       match = [match]
     }
 

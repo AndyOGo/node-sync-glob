@@ -13,8 +13,8 @@ export const copy = (source, target, options, notify) => {
         const file = fs.readFileSync(source)
         const transformed = transform(file, target)
         const isObject = typeof transformed === 'object'
-        const data = isObject && transformed.data || transformed
-        const newTarget = isObject && transformed.target || target
+        const data = (isObject && transformed.data) || transformed
+        const newTarget = (isObject && transformed.target) || target
 
         fs.mkdirsSync(path.dirname(newTarget))
         fs.writeFileSync(newTarget, data)
@@ -57,8 +57,9 @@ export const deleteExtra = (fileordir, options, notify) => {
   }
 }
 
-const getBase = (file, base) => base.filter((base) => file.indexOf(base) !== -1)
-    .reduce((hit, base) => hit.length > base.length ? hit : base, '')
+const getBase = (file, bases) => bases.filter(base => file.indexOf(base) !== -1)
+  // eslint-disable-next-line no-confusing-arrow
+  .reduce((hit, base) => hit.length > base.length ? hit : base, '')
 
 export const resolveTarget = (file, target, options) => {
   const from = path.join(cwd, getBase(file, options.base))

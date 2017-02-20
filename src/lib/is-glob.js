@@ -14,7 +14,8 @@ const isGlob = (str) => {
     }
   }
 
-  if (index > 0 || index === 0 && !matchFirst) {
+  if ((index > 0 || index === 0) && !matchFirst) {
+    // eslint-disable-next-line no-plusplus
     ++index
   }
 

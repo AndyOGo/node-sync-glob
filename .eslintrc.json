@@ -13,6 +13,7 @@
     "max-len": ["warn", 140, 2],
     "no-cond-assign": ["error", "except-parens"],
     "no-else-return": "warn",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-use-before-define": ["error", { "functions": false, "classes": false }],
     "semi": ["error", "never"],
     "quote-props": ["error", "consistent"]
