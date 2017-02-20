@@ -41,6 +41,8 @@ export const awaitMatch = (...args) => {
   let callback = args.shift()
 
   return (event, data) => {
+    console.log(`--> ${event}`)
+    console.log(data)
     if (!match.length && !args.length) {
       return
     }

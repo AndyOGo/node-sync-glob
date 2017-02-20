@@ -48,9 +48,7 @@ describe('node-sync-glob watch', () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
       },
       'copied', compareDir(() => {
-        setTimeout(() => {
-          fs.removeSync('tmp/mock/foo/d.txt')
-        })
+        fs.removeSync('tmp/mock/foo/d.txt')
       }, 'tmp/mock/foo', 'tmp/sync'),
       'removed', () => {
         expect(fs.existsSync('tmp/sync/b.txt')).toBe(true)
