@@ -15,6 +15,8 @@ const defaults = {
   depth: Infinity,
 }
 
+let count = 0
+
 const syncGlob = (sources, target, options, notify) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
@@ -57,6 +59,8 @@ const syncGlob = (sources, target, options, notify) => {
   }
 
   if (options.watch) {
+    ++count
+    console.log(`+++ Start watching: ${count}`)
     // Watcher to keep in sync from that
     watcher = chokidar.watch(sources, {
       persistent: true,
@@ -71,7 +75,7 @@ const syncGlob = (sources, target, options, notify) => {
       .on('unlinkDir', watcherDestroy(target, options, notify))
       .on('error', watcherError(options, notify))
       .on('all', (...args) => {
-        console.log(`***CHOKIDAR: ${args.join(', ')}***`)
+        console.log(`***CHOKIDAR ${count}: ${args.join(', ')}***`)
       })
 
     process.on('SIGINT', stopWatching)
