@@ -62,6 +62,7 @@ const syncGlob = (sources, target, options, notify) => {
     // eslint-disable-next-line no-plusplus
     ++count
     console.log(`+++ Start watching: ${count}`)
+    console.log(sources)
     // Watcher to keep in sync from that
     watcher = chokidar.watch(sources, {
       persistent: true,
