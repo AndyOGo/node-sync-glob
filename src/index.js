@@ -59,6 +59,7 @@ const syncGlob = (sources, target, options, notify) => {
   }
 
   if (options.watch) {
+    // eslint-disable-next-line no-plusplus
     ++count
     console.log(`+++ Start watching: ${count}`)
     // Watcher to keep in sync from that
