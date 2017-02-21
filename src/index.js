@@ -68,6 +68,7 @@ const syncGlob = (sources, target, options, notify) => {
       persistent: true,
       depth: options.depth,
       ignoreInitial: true,
+      awaitWriteFinish: true,
     })
       .on('ready', notify.bind(undefined, 'watch', sources))
       .on('add', watcherCopy(target, options, notify))
