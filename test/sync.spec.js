@@ -10,7 +10,6 @@ describe('node-sync-glob watch', () => {
   afterAll(afterAllSpecs)
 
   it('should sync a file', (done) => {
-    console.log('### start #1')
     const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, awaitMatch(
       'watch', () => {
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
@@ -27,7 +26,6 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync an array of files', (done) => {
-    console.log('### start #2')
     const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, awaitMatch(
       'watch', () => {
         fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
@@ -45,7 +43,6 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync a directory', (done) => {
-    console.log('### start #3')
     const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, awaitMatch(
       'watch', () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')

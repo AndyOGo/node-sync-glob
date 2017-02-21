@@ -41,7 +41,6 @@ export const awaitMatch = (...args) => {
   let callback = args.shift()
 
   return (event, data) => {
-    console.log(`--> ${event}: ${data}`)
     if (!match.length && !args.length) {
       return
     }
@@ -68,16 +67,11 @@ export const compare = (done, options) => (event, data) => {
     const [source, target] = data
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-    try {
-      expect(res.differences).toBe(0)
-      expect(res.differencesFiles).toBe(0)
-      expect(res.distinctFiles).toBe(0)
-      expect(res.differencesDirs).toBe(0)
-      expect(res.distinctDirs).toBe(0)
-    } catch (err) {
-      console.log(`compare: ${source} <-> ${target}`)
-      console.log(res)
-    }
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
 
     if (done) {
       done()
@@ -89,16 +83,11 @@ export const compareDir = (done, source, target, options) => (event) => {
   if (event) {
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
-    try {
-      expect(res.differences).toBe(0)
-      expect(res.differencesFiles).toBe(0)
-      expect(res.distinctFiles).toBe(0)
-      expect(res.differencesDirs).toBe(0)
-      expect(res.distinctDirs).toBe(0)
-    } catch (err) {
-      console.log(`compareDir: ${source} <-> ${target}`)
-      console.log(res)
-    }
+    expect(res.differences).toBe(0)
+    expect(res.differencesFiles).toBe(0)
+    expect(res.distinctFiles).toBe(0)
+    expect(res.differencesDirs).toBe(0)
+    expect(res.distinctDirs).toBe(0)
 
     if (done) {
       done()
