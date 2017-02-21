@@ -1,5 +1,5 @@
-const reGlobFirstChar = /^\{.*}|\*\*?|\[.*]|[!?+*@]\(.*\)|\?/
-const reGlob = /(?!\\).(:?\{.*}|\*\*?|\[.*]|[!?+*@]\(.*\)|\?)/
+const reGlobFirstChar = /^\{.*[^\\]}|^\*\*?|^\[.*[^\\]]|^[!?+*@]\(.*[^\\]\)|^\?/
+const reGlob = /(?!\\).(:?\{.*[^\\]}|\*\*?|\[.*[^\\]]|[!?+*@]\(.*[^\\]\)|\?)/
 
 const isGlob = (str) => {
   const match = reGlob.exec(str)
@@ -14,7 +14,8 @@ const isGlob = (str) => {
     }
   }
 
-  if (index > 0 || index === 0 && !matchFirst) {
+  if ((index > 0 || index === 0) && !matchFirst) {
+    // eslint-disable-next-line no-plusplus
     ++index
   }
 

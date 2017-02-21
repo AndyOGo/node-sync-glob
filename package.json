@@ -11,14 +11,8 @@
     "help": "node bin/sync-glob.js --help",
     "preversion": "npm run build",
     "version": "node bin/sync-glob.js --version",
-    "pretest": "npm run build",
-    "test": "node bin/sync-glob.js -w -v -d 'test/**/*' 'node_modules/yargs/{lib,lib}/*.js' '!test/**/b.txt' tmp",
-    "pretest:dir": "npm run build",
-    "test:dir": "node bin/sync-glob.js -w -v test/@org '!test/**/b.txt' tmp/testdir",
-    "pretest:transform": "npm run build",
-    "test:transform": "node bin/sync-glob.js -v -d -t test/transform.js 'test/**/*' tmp/transform",
-    "pretest:file": "npm run build",
-    "test:file": "node bin/sync-glob.js -v -d 'test/b.txt' 'test/@org/b.txt' 'test/bar/c*' 'test/foo/*.txt' tmp/file",
+    "test": "jest --runInBand --verbose --no-cache --config ./.jestrc.json",
+    "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
     "prepublish": "npm run build"
   },
   "bin": {
@@ -57,13 +51,16 @@
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.0",
+    "babel-jest": "^18.0.0",
     "babel-plugin-transform-class-properties": "^6.18.0",
     "babel-plugin-transform-es2015-destructuring": "^6.18.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "babel-preset-es2015": "^6.18.0",
+    "dir-compare": "^1.3.0",
     "eslint": "^3.9.1",
     "eslint-config-airbnb-base": "^9.0.0",
-    "eslint-plugin-import": "^2.0.1"
+    "eslint-plugin-import": "^2.0.1",
+    "jest": "^18.1.0"
   }
 }

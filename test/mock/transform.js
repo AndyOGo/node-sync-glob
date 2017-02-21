@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = function transform(data, target) {
   console.log('transform %s', target)
 

@@ -7,6 +7,7 @@ const reDir = /\/|\\/
 
 const globBase = (glob) => {
   if (!Array.isArray(glob)) {
+    // eslint-disable-next-line no-param-reassign
     glob = [glob]
   }
 
@@ -21,14 +22,21 @@ const globBase = (glob) => {
 
     if (index > -1) {
       const charBeforeGlob = pattern.charAt(index - 1)
-      isDir = reDir.test(charBeforeGlob)
 
+      isDir = reDir.test(charBeforeGlob)
+      // eslint-disable-next-line no-param-reassign
       pattern = pattern.substring(0, index)
     }
 
-    if (foundGlob && !isDir ||
-      !foundGlob && fs.statSync(pattern).isFile()) {
-      pattern = path.dirname(pattern)
+    if (pattern) {
+      if ((foundGlob && !isDir) ||
+        (!foundGlob && fs.statSync(pattern).isFile())) {
+        // eslint-disable-next-line no-param-reassign
+        pattern = path.dirname(pattern)
+      } else if (reDir.test(pattern.charAt(pattern.length - 1))) {
+        // eslint-disable-next-line no-param-reassign
+        pattern = pattern.slice(0, -1)
+      }
     }
 
     base.push(pattern)

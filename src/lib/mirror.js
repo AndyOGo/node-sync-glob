@@ -8,7 +8,9 @@ const mirror = (sources, target, options, notify) => {
   let flag = true
   const files = glob.sync(sources.map(str => (isGlob(str) === -1 && fs.statSync(str).isDirectory() ? `${str}/**` : str)))
 
-  deleteExtra(target, options, notify)
+  if (options.deleteInitial) {
+    deleteExtra(target, options, notify)
+  }
 
   for (let i = 0, l = files.length; i < l; ++i) {
     const file = files[i]
@@ -17,6 +19,10 @@ const mirror = (sources, target, options, notify) => {
       flag = false
       break
     }
+  }
+
+  if (flag) {
+    notify('mirrored')
   }
 
   return flag

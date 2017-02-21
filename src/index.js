@@ -10,15 +10,19 @@ import { watcherCopy, watcherDestroy, watcherError } from './lib/watcher'
 
 const defaults = {
   watch: false,
-  delete: false,
+  delete: true,
+  deleteInitial: false,
   depth: Infinity,
 }
 
 const syncGlob = (sources, target, options, notify) => {
   if (!Array.isArray(sources)) {
+    // eslint-disable-next-line no-param-reassign
     sources = [sources]
   }
+  // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+  // eslint-disable-next-line no-param-reassign
   options = {
     ...defaults,
     base: globBase(sources),
@@ -39,11 +43,13 @@ const syncGlob = (sources, target, options, notify) => {
       transformPath = path.join(process.cwd(), transformPath)
     }
 
+    // eslint-disable-next-line
     options.transform = require(transformPath)
   }
 
   // Initial mirror
   const mirrored = mirror(sources, target, options, notify, 0)
+  let watcher
 
   if (!mirrored) {
     notify('error', 'Initial mirror failed')
@@ -52,10 +58,11 @@ const syncGlob = (sources, target, options, notify) => {
 
   if (options.watch) {
     // Watcher to keep in sync from that
-    const watcher = chokidar.watch(sources, {
+    watcher = chokidar.watch(sources, {
       persistent: true,
       depth: options.depth,
       ignoreInitial: true,
+      awaitWriteFinish: true,
     })
       .on('ready', notify.bind(undefined, 'watch', sources))
       .on('add', watcherCopy(target, options, notify))
@@ -68,9 +75,14 @@ const syncGlob = (sources, target, options, notify) => {
     process.on('SIGINT', stopWatching)
     process.on('SIGQUIT', stopWatching)
     process.on('SIGTERM', stopWatching)
+  }
 
-    function stopWatching() {
+  return stopWatching
+
+  function stopWatching() {
+    if (watcher) {
       watcher.close()
+      watcher = null
     }
   }
 }
