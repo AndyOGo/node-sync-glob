@@ -5,15 +5,15 @@ import isGlob from './is-glob'
 
 const reDir = /\/|\\/
 
-const globBase = (glob) => {
+const globBases = (glob) => {
   if (!Array.isArray(glob)) {
     // eslint-disable-next-line no-param-reassign
     glob = [glob]
   }
 
-  return glob.reduce((base, pattern) => {
+  return glob.reduce((bases, pattern) => {
     if (pattern.charAt(0) === '!') {
-      return base
+      return bases
     }
 
     const index = isGlob(pattern)
@@ -39,10 +39,12 @@ const globBase = (glob) => {
       }
     }
 
-    base.push(pattern)
+    if (bases.indexOf(pattern) === -1) {
+      bases.push(pattern)
+    }
 
-    return base
+    return bases
   }, [])
 }
 
-export default globBase
+export default globBases

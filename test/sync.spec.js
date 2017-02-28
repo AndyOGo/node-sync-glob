@@ -14,10 +14,10 @@ describe('node-sync-glob watch', () => {
       'watch', () => {
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
       },
-      'copied', compare(() => {
+      'copy', compare(() => {
         fs.removeSync('tmp/mock/a.txt')
       }),
-      'removed', () => {
+      'remove', () => {
         expect(fs.existsSync('tmp/sync/a.txt')).toBe(false)
         close()
         done()
@@ -30,10 +30,10 @@ describe('node-sync-glob watch', () => {
       'watch', () => {
         fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
       },
-      'copied', compare(() => {
+      'copy', compare(() => {
         fs.removeSync('tmp/mock/b.txt')
       }),
-      'removed', () => {
+      'remove', () => {
         expect(fs.existsSync('tmp/sync/a.txt')).toBe(true)
         expect(fs.existsSync('tmp/sync/b.txt')).toBe(false)
         close()
@@ -47,10 +47,10 @@ describe('node-sync-glob watch', () => {
       'watch', () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
       },
-      'copied', compareDir(() => {
+      'copy', compareDir(() => {
         fs.removeSync('tmp/mock/foo/d.txt')
       }, 'tmp/mock/foo', 'tmp/sync'),
-      'removed', () => {
+      'remove', () => {
         expect(fs.existsSync('tmp/sync/b.txt')).toBe(true)
         expect(fs.existsSync('tmp/sync/d.txt')).toBe(false)
         close()
