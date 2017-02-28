@@ -1,20 +1,24 @@
 /* globals process */
 
+import fs from 'fs'
 import path from 'path'
+import globAll from 'glob-all'
 import chokidar from 'chokidar'
 
-import globBase from './lib/glob-base'
-import mirror from './lib/mirror'
+import resolveTarget from './lib/resolve-target'
+import globBases from './lib/glob-bases'
+import isGlob from './lib/is-glob'
+import promisify from './lib/promisify'
 import trimQuotes from './lib/trim-quotes'
-import { watcherCopy, watcherDestroy, watcherError } from './lib/watcher'
+import { copyDir, copyFile, remove } from './lib/fs'
 
 const defaults = {
   watch: false,
   delete: true,
-  deleteInitial: false,
   depth: Infinity,
 }
 
+// eslint-disable-next-line consistent-return
 const syncGlob = (sources, target, options, notify) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
@@ -25,65 +29,122 @@ const syncGlob = (sources, target, options, notify) => {
   // eslint-disable-next-line no-param-reassign
   options = {
     ...defaults,
-    base: globBase(sources),
     ...options,
   }
 
-  if (typeof options.depth !== 'number' || isNaN(options.depth)) {
-    notify('error', 'Expected valid number for option "depth"')
+  const notifyError = (err) => { notify('error', err) }
+  const bases = globBases(sources)
+  const resolveTargetFromBases = resolveTarget(bases)
+  const { depth, watch } = options
+  let { transform } = options
+
+  if (typeof depth !== 'number' || isNaN(depth)) {
+    notifyError('Expected valid number for option "depth"')
     return false
   }
 
-  if (options.transform) {
-    let transformPath = options.transform
+  if (transform) {
+    let transformPath = transform
 
     try {
       require.resolve(transformPath)
-    } catch (e) {
+    } catch (err) {
       transformPath = path.join(process.cwd(), transformPath)
+
+      try {
+        require.resolve(transformPath)
+      } catch (err2) {
+        notifyError(err2)
+      }
     }
 
     // eslint-disable-next-line
-    options.transform = require(transformPath)
+    transform = require(transformPath)
   }
 
   // Initial mirror
-  const mirrored = mirror(sources, target, options, notify, 0)
-  let watcher
+  const mirrorInit = [
+    promisify(globAll)(sources.map(source => (isGlob(source) === -1
+      && fs.statSync(source).isDirectory() ? `${source}/**` : source))),
+  ]
 
-  if (!mirrored) {
-    notify('error', 'Initial mirror failed')
-    return false
+  if (options.delete) {
+    mirrorInit.push(remove(target).then(() => {
+      notify('remove', target)
+    }, notifyError))
+  } else {
+    notify('no-delete', target)
   }
 
-  if (options.watch) {
-    // Watcher to keep in sync from that
-    watcher = chokidar.watch(sources, {
+  Promise.all(mirrorInit)
+    .then(([files]) => Promise.all(files.map((file) => {
+      const resolvedTarget = resolveTargetFromBases(file, target)
+
+      return copyFile(file, resolvedTarget, transform).then(() => {
+        notify('copy', [file, resolvedTarget])
+      }, (err) => {
+        notify('error', err)
+      })
+    }))).then(() => {
+      notify('mirror', [sources, target])
+    }, notifyError)
+
+  // Watcher to keep in sync from that
+  if (watch) {
+    let watcher = chokidar.watch(sources, {
       persistent: true,
-      depth: options.depth,
+      depth,
       ignoreInitial: true,
       awaitWriteFinish: true,
     })
-      .on('ready', notify.bind(undefined, 'watch', sources))
-      .on('add', watcherCopy(target, options, notify))
-      .on('addDir', watcherCopy(target, options, notify))
-      .on('change', watcherCopy(target, options, notify))
-      .on('unlink', watcherDestroy(target, options, notify))
-      .on('unlinkDir', watcherDestroy(target, options, notify))
-      .on('error', watcherError(options, notify))
-
-    process.on('SIGINT', stopWatching)
-    process.on('SIGQUIT', stopWatching)
-    process.on('SIGTERM', stopWatching)
-  }
-
-  return stopWatching
-
-  function stopWatching() {
-    if (watcher) {
-      watcher.close()
-      watcher = null
+    const closeWatcher = () => {
+      if (watcher) {
+        watcher.close()
+        watcher = null
+      }
     }
+
+    watcher.on('ready', notify.bind(undefined, 'watch', sources))
+      .on('all', (event, source) => {
+        const resolvedTarget = resolveTargetFromBases(source, target)
+        let promise
+
+        // eslint-disable-next-line default-case
+        switch (event) {
+          case 'add':
+          case 'change':
+            promise = copyFile(source, resolvedTarget, transform)
+            break
+
+          case 'addDir':
+            promise = copyDir(source, resolvedTarget)
+            break
+
+          case 'unlink':
+          case 'unlinkDir':
+            promise = remove(resolvedTarget)
+            break
+        }
+
+        promise.then(() => {
+          const eventMap = {
+            add: 'copy',
+            addDir: 'copy',
+            change: 'copy',
+            unlink: 'remove',
+            unlinkDir: 'remove',
+          }
+
+          notify(eventMap[event] || event, [source, resolvedTarget])
+        }, notifyError)
+      })
+      .on('error', notifyError)
+
+    process.on('SIGINT', closeWatcher)
+    process.on('SIGQUIT', closeWatcher)
+    process.on('SIGTERM', closeWatcher)
+
+    return closeWatcher
   }
 }
 

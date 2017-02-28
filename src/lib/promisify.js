@@ -1,5 +1,6 @@
 const promisify = (func, { context = null, multiArgs } = {}) => (...args) => new Promise((resolve, reject) => {
   args.push((err, ...values) => {
+    // console.log(values)
     if (err) reject(err)
     else resolve(multiArgs ? values : values[0])
   })
