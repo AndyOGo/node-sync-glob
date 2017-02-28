@@ -10,6 +10,15 @@ export const afterAllSpecs = () => {
   fs.removeSync('tmp')
 }
 
+export const awaitCount = (limit, done) => {
+  let count = 0
+
+  return () => {
+    // eslint-disable-next-line no-plusplus
+    if (++count === limit) done()
+  }
+}
+
 export const awaitMatch = (...args) => {
   if (args.length % 2) {
     throw new Error('Args arity must be sets of two')

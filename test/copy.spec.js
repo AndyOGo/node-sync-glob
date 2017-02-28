@@ -1,5 +1,5 @@
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitMatch, compare, compareDir } from './helpers'
+import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir } from './helpers'
 
 describe('node-sync-glob copy', () => {
   beforeEach(beforeEachSpec)
@@ -20,17 +20,19 @@ describe('node-sync-glob copy', () => {
   })
 
   it('should copy a directory (without contents)', (done) => {
+    const awaitDone = awaitCount(4, done)
+
     syncGlob('tmp/mock/foo', 'tmp/copy', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/foo', 'tmp/copy')
+      'mirror', compareDir(awaitDone, 'tmp/mock/foo', 'tmp/copy')
     ))
     syncGlob('tmp/mock/foo/', 'tmp/copy1', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/foo/', 'tmp/copy1')
+      'mirror', compareDir(awaitDone, 'tmp/mock/foo/', 'tmp/copy1')
     ))
     syncGlob('tmp/mock/@org', 'tmp/copy2', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/@org', 'tmp/copy2')
+      'mirror', compareDir(awaitDone, 'tmp/mock/@org', 'tmp/copy2')
     ))
     syncGlob('tmp/mock/@org/', 'tmp/copy3', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/@org/', 'tmp/copy3')
+      'mirror', compareDir(awaitDone, 'tmp/mock/@org/', 'tmp/copy3')
     ))
   })
 
