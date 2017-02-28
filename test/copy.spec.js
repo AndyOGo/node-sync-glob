@@ -23,14 +23,14 @@ describe('node-sync-glob copy', () => {
     syncGlob('tmp/mock/foo', 'tmp/copy', {}, awaitMatch(
       'mirror', compareDir(done, 'tmp/mock/foo', 'tmp/copy')
     ))
-    syncGlob('tmp/mock/foo/', 'tmp/copy', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/foo/', 'tmp/copy')
+    syncGlob('tmp/mock/foo/', 'tmp/copy1', {}, awaitMatch(
+      'mirror', compareDir(done, 'tmp/mock/foo/', 'tmp/copy1')
     ))
-    syncGlob('tmp/mock/@org', 'tmp/copy', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/@org', 'tmp/copy')
+    syncGlob('tmp/mock/@org', 'tmp/copy2', {}, awaitMatch(
+      'mirror', compareDir(done, 'tmp/mock/@org', 'tmp/copy2')
     ))
-    syncGlob('tmp/mock/@org/', 'tmp/copy', {}, awaitMatch(
-      'mirror', compareDir(done, 'tmp/mock/@org/', 'tmp/copy')
+    syncGlob('tmp/mock/@org/', 'tmp/copy3', {}, awaitMatch(
+      'mirror', compareDir(done, 'tmp/mock/@org/', 'tmp/copy3')
     ))
   })
 
@@ -45,7 +45,7 @@ describe('node-sync-glob copy', () => {
       { copy: 3 }, compare(),
       'mirror', done
     ))
-    syncGlob('tmp/mock/foo/*.txt', 'tmp/copy', {}, awaitMatch(
+    syncGlob('tmp/mock/foo/*.txt', 'tmp/copy1', {}, awaitMatch(
       { copy: 2 }, compare(),
       'mirror', done
     ))
