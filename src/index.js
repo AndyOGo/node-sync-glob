@@ -82,9 +82,7 @@ const syncGlob = (sources, target, options, notify) => {
 
       return copyFile(file, resolvedTarget, transform).then(() => {
         notify('copy', [file, resolvedTarget])
-      }, (err) => {
-        notify('error', err)
-      })
+      }, notifyError)
     }))).then(() => {
       notify('mirror', [sources, target])
     }, notifyError)
