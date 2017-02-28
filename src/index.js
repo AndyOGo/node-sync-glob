@@ -107,7 +107,6 @@ const syncGlob = (sources, target, options, notify) => {
         const resolvedTarget = resolveTargetFromBases(source, target)
         let promise
 
-        // eslint-disable-next-line default-case
         switch (event) {
           case 'add':
           case 'change':
@@ -122,6 +121,9 @@ const syncGlob = (sources, target, options, notify) => {
           case 'unlinkDir':
             promise = remove(resolvedTarget)
             break
+
+          default:
+            return
         }
 
         promise.then(() => {
