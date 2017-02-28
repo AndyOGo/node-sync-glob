@@ -1,6 +1,6 @@
 import globBases from '../../src/lib/glob-bases'
 
-describe('lib/glob-base', () => {
+describe('lib/glob-bases', () => {
   it('should resolve the base path of globs', () => {
     expect(globBases('*')).toEqual([''])
     expect(globBases('test/mock/*.txt')).toEqual(['test/mock'])
@@ -38,5 +38,25 @@ describe('lib/glob-base', () => {
 
   it('should ignore exclude patterns', () => {
     expect(globBases('!test/mock/*.txt')).toEqual([])
+  })
+
+  it('should list multiple distinct base paths', () => {
+    expect(globBases([
+      'test/mock/a.txt',
+      'test/mock/bar/c.txt',
+      'test/mock/@org',
+      'test/mock/foo/*.txt',
+    ])).toEqual([
+      'test/mock',
+      'test/mock/bar',
+      'test/mock/@org',
+      'test/mock/foo',
+    ])
+  })
+
+  it('should list common base baths no more than once', () => {
+    expect(globBases(['test/mock/a.txt', 'test/mock/b.txt'])).toEqual(['test/mock'])
+    expect(globBases(['test/mock', 'test/mock/'])).toEqual(['test/mock'])
+    expect(globBases(['test/*.txt', 'test/*.txt'])).toEqual(['test'])
   })
 })

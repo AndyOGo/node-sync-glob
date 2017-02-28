@@ -39,7 +39,9 @@ const globBases = (glob) => {
       }
     }
 
-    bases.push(pattern)
+    if (bases.indexOf(pattern) === -1) {
+      bases.push(pattern)
+    }
 
     return bases
   }, [])
