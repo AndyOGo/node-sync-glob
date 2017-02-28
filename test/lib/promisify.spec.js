@@ -7,6 +7,9 @@ const isPromise = obj => typeof obj === 'object' &&
 describe('lib/promisify', () => {
   it('should tranform first-error API to promise', () => {
     const strutPromise = promisify(strut)()
+    const noop = () => {}
+
+    strutPromise.then(noop).catch(noop)
 
     expect(isPromise(strutPromise)).toBe(true)
   })
