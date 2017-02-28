@@ -56,7 +56,7 @@ const notifyPriority = {
   'no-delete': 'low',
 }
 
-syncGlob(sources, target, {
+const close = syncGlob(sources, target, {
   watch: argv.watch,
   delete: argv.delete,
   depth: argv.depth || Infinity,
@@ -72,6 +72,9 @@ syncGlob(sources, target, {
 
     case 'error':
       console.error(chalk.bold.red(data.message || data))
+
+      if (close) close()
+
       process.exit(data.code || 2)
       break
 
