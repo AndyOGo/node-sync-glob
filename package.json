@@ -7,6 +7,7 @@
     "build": "babel src --out-dir ./",
     "predev": "npm run build",
     "dev": "node bin/sync-glob.js",
+    "docs": "documentation build src/ --output API.md --format md",
     "prehelp": "npm run build",
     "help": "node bin/sync-glob.js --help",
     "preversion": "npm run build",
