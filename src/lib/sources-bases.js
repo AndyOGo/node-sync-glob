@@ -5,6 +5,15 @@ import isGlob from './is-glob'
 
 const reDir = /\/|\\/
 
+/**
+ * Determine the base paths of `sources` like:
+ * - **files:** `foo/bar.txt` -> `foo`
+ * - **directories:** `foo/bar/` -> `foo/bar`
+ * - **globs:** `foo/*` -> `foo`
+ *
+ * @param {string|Array.<string>} sources - One or more files, directors or glob patterns.
+ * @returns {Array.<string>} - Returns the base paths of `sources`.
+ */
 const sourcesBases = (sources) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
