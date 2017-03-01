@@ -12,7 +12,7 @@
 -   [promisify](#promisify)
 -   [PromiseFactory](#promisefactory)
 -   [resolveTarget](#resolvetarget)
--   [resolveTargetFunc](#resolvetargetfunc)
+-   [ResolveTargetFunc](#resolvetargetfunc)
 -   [sourcesBases](#sourcesbases)
 -   [trimQuotes](#trimquotes)
 
@@ -24,12 +24,12 @@ Synchronise files, directories and/or glob patterns, optionally watching for cha
 
 -   `sources` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>)** A list of files, directories and/or glob patterns.
 -   `target` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The destination directory.
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** A optional configuration object.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An optional configuration object.
     -   `options.watch` **bool?** Enable or disable watch mode. (optional, default `false`)
     -   `options.delete` **bool?** Whether to delete the `target`'s content initially. (optional, default `true`)
     -   `options.depth` **bool?** Chokidars `depth` (If set, limits how many levels of subdirectories will be traversed). (optional, default `Infinity`)
-    -   `options.transform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** A module path resolve by node's `require`. (optional, default `false`)
--   `notify` **[NotifyCallback](#notifycallback)?** An optinal notification callback.
+    -   `options.transform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** A module path resolved by node's `require`. (optional, default `false`)
+-   `notify` **[NotifyCallback](#notifycallback)?** An optional notification callback.
 
 Returns **(Void | CloseFunc)** Returns nothing or in case of `watch` mode a close function.
 
@@ -41,8 +41,8 @@ This callback notifies you about various steps, like:
 -   **remove:** File or directory has been removed from `target`.
 -   **no-delete:** No initial deletion of `target`s contents.
 -   **mirror:** Initial copy of all `sources` to `target` done.
--   **watch:** Watch mode has startet.
--   **error:** Any error whcih may occured during program execution.
+-   **watch:** Watch mode has started.
+-   **error:** Any error which may occurred during program execution.
 
 Type: [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)
 
@@ -142,11 +142,11 @@ Determines the target structure by resolving a given `source` against a list of 
 
 -   `bases` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>** An array of base paths.
 
-Returns **[resolveTargetFunc](#resolvetargetfunc)** Returns an `source` to `target` resolving function.
+Returns **[ResolveTargetFunc](#resolvetargetfunc)** Returns an `source` to `target` resolving function.
 
-## resolveTargetFunc
+## ResolveTargetFunc
 
-A function which resolve a given `source` to a given `target` based on list of base paths.
+A function which resolves a given `source` to a given `target` based on list of base paths.
 
 Type: [function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)
 
