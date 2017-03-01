@@ -61,9 +61,24 @@ You may have some build script in your package.json involving mirroring folders 
 }
 ```
 
-### Note
+### Important
 
 Make sure that your globs are not being parsed by your shell by properly escaping them, e.g.: by quoting `'**/*'`.
+
+### Exclude stuff
+
+To exclude stuff from source just use glob exclusion - `!` prefix, like:
+```js
+{
+  "scripts": {
+    "sync": "sync-glob 'src/images/*' '!src/images/excluded.jpg' dist/images"
+  }
+}
+```
+
+## API
+
+Check our [API documentation](./API.md)
 
 ## Credit/Inspiration
 
@@ -71,3 +86,5 @@ This package was mainly inspired by [`node-sync-files`](https://github.com/bytec
 I mainly kept the API as is, but enhanced the file matching by utilizing powerful globs.
 Additionally it is a complete rewrite in ES6 and it does not suffer from outdated dependencies.
 Some fancy features like `--transform` is inspired by [`cpx`](https://www.npmjs.com/package/cpx)
+
+Proudly brought to you by [`<scale-unlimited>`](http://www.scale-unlimited.com)
