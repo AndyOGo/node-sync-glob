@@ -6,7 +6,7 @@ import globAll from 'glob-all'
 import chokidar from 'chokidar'
 
 import resolveTarget from './lib/resolve-target'
-import globBases from './lib/glob-bases'
+import sourcesBases from './lib/sources-bases'
 import isGlob from './lib/is-glob'
 import promisify from './lib/promisify'
 import trimQuotes from './lib/trim-quotes'
@@ -33,7 +33,7 @@ const syncGlob = (sources, target, options, notify) => {
   }
 
   const notifyError = (err) => { notify('error', err) }
-  const bases = globBases(sources)
+  const bases = sourcesBases(sources)
   const resolveTargetFromBases = resolveTarget(bases)
   const { depth, watch } = options
   let { transform } = options

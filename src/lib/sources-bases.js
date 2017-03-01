@@ -5,13 +5,13 @@ import isGlob from './is-glob'
 
 const reDir = /\/|\\/
 
-const globBases = (glob) => {
-  if (!Array.isArray(glob)) {
+const sourcesBases = (sources) => {
+  if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
-    glob = [glob]
+    sources = [sources]
   }
 
-  return glob.reduce((bases, pattern) => {
+  return sources.reduce((bases, pattern) => {
     if (pattern.charAt(0) === '!') {
       return bases
     }
@@ -47,4 +47,4 @@ const globBases = (glob) => {
   }, [])
 }
 
-export default globBases
+export default sourcesBases
