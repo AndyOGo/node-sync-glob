@@ -18,6 +18,19 @@ const defaults = {
   depth: Infinity,
 }
 
+/**
+ * Synchronise files, directories and/or glob patterns, optionally watching for changes.
+ *
+ * @param {string|Array.<string>} sources - A list of files, directories and/or glob patterns.
+ * @param {string} target - The destination directory.
+ * @param {Object} [options] - A optional configuration object.
+ * @param {bool} [options.watch=false] - Enable or disable watch mode.
+ * @param {bool} [options.delete=true] - Whether to delete the `target`'s content initially.
+ * @param {bool} [options.depth=Infinity] - Chokidars `depth` (If set, limits how many levels of subdirectories will be traversed).
+ * @param {string} [options.transform=false] - A module path resolve by node's `require`.
+ * @param {NotifyCallback} [notify] - An optinal notification callback.
+ * @returns {Void|CloseFunc} - Returns nothing or in case of `watch` mode a close function.
+ */
 // eslint-disable-next-line consistent-return
 const syncGlob = (sources, target, options, notify = () => {}) => {
   if (!Array.isArray(sources)) {
@@ -149,3 +162,17 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
 }
 
 export default syncGlob
+
+/**
+ * This callback notifies you about various steps, like:
+ * - **copy:** File or directory has been copied to `target`.
+ * - **remove:** File or directory has been removed from `target`.
+ * - **no-delete:** No initial deletion of `target`s contents.
+ * - **mirror:** Initial copy of all `sources` to `target` done.
+ * - **watch:** Watch mode has startet.
+ * - **error:** Any error whcih may occured during program execution.
+ *
+ * @callback NotifyCallback
+ * @param {string} type - The type of notification.
+ * @param {...any} args - Event specific variadic arguments.
+ */
