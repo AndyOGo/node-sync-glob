@@ -19,7 +19,7 @@ const defaults = {
 }
 
 // eslint-disable-next-line consistent-return
-const syncGlob = (sources, target, options, notify) => {
+const syncGlob = (sources, target, options, notify = () => {}) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
     sources = [sources]
