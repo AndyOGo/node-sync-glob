@@ -31,7 +31,7 @@ const defaults = {
  * @param {bool} [options.depth=Infinity] - Chokidars `depth` (If set, limits how many levels of subdirectories will be traversed).
  * @param {string} [options.transform=false] - A module path resolved by node's `require`.
  * @param {NotifyCallback} [notify] - An optional notification callback.
- * @returns {Void|CloseFunc} - Returns nothing or in case of `watch` mode a close function.
+ * @returns {CloseFunc} - Returns a close function which cancels active promises and watch mode.
  */
 // eslint-disable-next-line consistent-return
 const syncGlob = (sources, target, options, notify = () => {}) => {
@@ -112,32 +112,34 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
       mirrorPromiseAll = null
     })
 
+  let watcher
+  let activePromises = []
+  const close = () => {
+    if (watcher) {
+      watcher.close()
+      watcher = null
+    }
+
+    if (mirrorPromiseAll) {
+      mirrorPromiseAll.cancel()
+      mirrorPromiseAll = null
+    }
+
+    activePromises.forEach((promise) => {
+      promise.cancel()
+    })
+
+    activePromises = null
+  }
+
   // Watcher to keep in sync from that
   if (watch) {
-    let watcher = chokidar.watch(sources, {
+    watcher = chokidar.watch(sources, {
       persistent: true,
       depth,
       ignoreInitial: true,
       awaitWriteFinish: true,
     })
-    let activePromises = []
-    const closeWatcher = () => {
-      if (watcher) {
-        watcher.close()
-        watcher = null
-      }
-
-      if (mirrorPromiseAll) {
-        mirrorPromiseAll.cancel()
-        mirrorPromiseAll = null
-      }
-
-      activePromises.forEach((promise) => {
-        promise.cancel()
-      })
-
-      activePromises = null
-    }
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
       .on('all', (event, source) => {
@@ -191,12 +193,12 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
       })
       .on('error', notifyError)
 
-    process.on('SIGINT', closeWatcher)
-    process.on('SIGQUIT', closeWatcher)
-    process.on('SIGTERM', closeWatcher)
-
-    return closeWatcher
+    process.on('SIGINT', close)
+    process.on('SIGQUIT', close)
+    process.on('SIGTERM', close)
   }
+
+  return close
 }
 
 export default syncGlob
@@ -213,4 +215,10 @@ export default syncGlob
  * @callback NotifyCallback
  * @param {string} type - The type of notification.
  * @param {...any} args - Event specific variadic arguments.
+ */
+
+/**
+ * A cleanup function which cancels all active promises and closes watch mode if enabled.
+ *
+ * @typedef {function} CloseFunc
  */
