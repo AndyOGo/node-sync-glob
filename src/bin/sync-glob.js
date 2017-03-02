@@ -43,6 +43,7 @@ const _ = argv._
 const length = _.length
 
 if (length < 2) {
+  // eslint-disable-next-line no-console
   console.error(chalk.bold.red(`Expects exactly two arguments, received ${length}`))
   process.exit(1)
 }
@@ -74,6 +75,7 @@ const close = syncGlob(sources, target, {
   switch (event) {
 
     case 'error':
+      // eslint-disable-next-line no-console
       console.error('%s %s', chalk.bold('ERROR'), chalk.bold.red(data.message || data))
 
       if (argv.exitOnError) {
@@ -81,34 +83,40 @@ const close = syncGlob(sources, target, {
           close()
         }
 
-        throw data
+        process.exit(data.code || 2)
       }
       break
 
     case 'copy':
+      // eslint-disable-next-line no-console
       console.log('%s %s to %s', chalk.bold('COPY'), chalk.yellow(path.relative(root, data[0])), chalk.yellow(path.relative(root, data[1])))
       break
 
     case 'remove':
+      // eslint-disable-next-line no-console
       console.log('%s %s', chalk.bold('DELETE'), chalk.yellow(path.relative(root, data)))
       break
 
     case 'watch':
+      // eslint-disable-next-line no-console
       console.log('%s %s', chalk.bold('WATCHING'), chalk.yellow(data))
       break
 
     case 'max-depth':
+      // eslint-disable-next-line no-console
       console.log('%s: %s too deep', chalk.bold.dim('MAX-DEPTH'), chalk.yellow(path.relative(root, data)))
       break
 
     case 'no-delete':
+      // eslint-disable-next-line no-console
       console.log('%s: %s extraneous but not deleted (use %s)', chalk.bold.dim('IGNORED'), chalk.yellow(path.relative(root, data)), chalk.blue('--delete'))
       break
 
     // Fallback: forgotten logs, displayed only in verbose mode
     default:
       if (argv.verbose) {
-        console.log(event, data)
+        // eslint-disable-next-line no-console
+        console.log('%s: %s', chalk.bold(event), data)
       }
   }
 })

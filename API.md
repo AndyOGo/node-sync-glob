@@ -4,13 +4,12 @@
 
 -   [syncGlob](#syncglob)
 -   [NotifyCallback](#notifycallback)
+-   [CloseFunc](#closefunc)
 -   [copyFile](#copyfile)
 -   [copyDir](#copydir)
 -   [remove](#remove)
 -   [TransformFunc](#transformfunc)
 -   [isGlob](#isglob)
--   [promisify](#promisify)
--   [PromiseFactory](#promisefactory)
 -   [resolveTarget](#resolvetarget)
 -   [ResolveTargetFunc](#resolvetargetfunc)
 -   [sourcesBases](#sourcesbases)
@@ -31,7 +30,7 @@ Synchronise files, directories and/or glob patterns, optionally watching for cha
     -   `options.transform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** A module path resolved by node's `require`. (optional, default `false`)
 -   `notify` **[NotifyCallback](#notifycallback)?** An optional notification callback.
 
-Returns **(Void | CloseFunc)** Returns nothing or in case of `watch` mode a close function.
+Returns **[CloseFunc](#closefunc)** Returns a close function which cancels active promises and watch mode.
 
 ## NotifyCallback
 
@@ -50,6 +49,12 @@ Type: [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referen
 
 -   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type of notification.
 -   `args` **...any** Event specific variadic arguments.
+
+## CloseFunc
+
+A cleanup function which cancels all active promises and closes watch mode if enabled.
+
+Type: [function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)
 
 ## copyFile
 
@@ -106,33 +111,6 @@ Determines whether a provided string contains a glob pattern.
 -   `str` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The string to test for glob patterns.
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Returns the index of the first glob pattern or `-1` if it is not a glob.
-
-## promisify
-
-Turn any async node first-error callback API into a Promise.
-If `err` is truthy it will be rejected, else it will be resolved.
-
-**Parameters**
-
--   `func` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Any functions which accepts a last `done` callback with error-first style.
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Optionally options as described below.
-    -   `options.context` **any?** Optionally bind `this` to some context. (optional, default `null`)
-    -   `options.multiArgs` **bool?** Is `done` called with more than `err` and `result` arguments.
--   `$1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `$1.context`   (optional, default `null`)
-    -   `$1.multiArgs`  
-
-Returns **[PromiseFactory](#promisefactory)** Returns a function which returns a Promise.
-
-## PromiseFactory
-
-A factory function which takes a variadic length of arguments, calls `func` with it and returns a Promise.
-
-Type: [function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)
-
-**Parameters**
-
--   `args` **...any?** Any arguments accepted by the supplied `func`'s API.
 
 ## resolveTarget
 
