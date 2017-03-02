@@ -11,6 +11,11 @@ describe('node-sync-glob watch', () => {
 
   it('should sync a file', (done) => {
     const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, awaitMatch(
+      'error', (err) => {
+        close()
+        fail(err)
+        done()
+      },
       ['watch', 'mirror'], () => {
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
       },
@@ -27,6 +32,11 @@ describe('node-sync-glob watch', () => {
 
   it('should sync an array of files', (done) => {
     const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, awaitMatch(
+      'error', (err) => {
+        close()
+        fail(err)
+        done()
+      },
       ['watch', 'mirror'], () => {
         fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
       },
@@ -44,6 +54,11 @@ describe('node-sync-glob watch', () => {
 
   it('should sync a directory', (done) => {
     const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, awaitMatch(
+      'error', (err) => {
+        close()
+        fail(err)
+        done()
+      },
       ['watch', 'mirror'], () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
       },
@@ -53,6 +68,28 @@ describe('node-sync-glob watch', () => {
       'remove', () => {
         expect(fs.existsSync('tmp/sync/b.txt')).toBe(true)
         expect(fs.existsSync('tmp/sync/d.txt')).toBe(false)
+        close()
+        done()
+      }
+    ))
+  })
+
+  it('should sync globstar', (done) => {
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', {}, awaitMatch(
+      'error', (err) => {
+        close()
+        fail(err)
+        done()
+      },
+      ['mirror', 'watch'], compareDir(() => {
+        fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
+      }, 'tmp/mock', 'tmp/sync'),
+      'copy', compareDir(() => {
+        fs.removeSync('tmp/mock/foo/d.txt')
+      }, 'tmp/mock', 'tmp/sync'),
+      'remove', () => {
+        expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
+        expect(fs.existsSync('tmp/sync/foo/d.txt')).toBe(false)
         close()
         done()
       }

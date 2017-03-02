@@ -48,8 +48,22 @@ export const awaitMatch = (...args) => {
   }
   let match = normalizeMatch(args.shift())
   let callback = args.shift()
+  let onError
+
+  if (match[0] === 'error') {
+    onError = callback
+
+    match = normalizeMatch(args.shift())
+    callback = args.shift()
+  }
 
   return (event, data) => {
+    if (event === 'error') {
+      console.error(`${event} -> ${data}`)
+
+      onError && onError(data)
+    }
+
     if (!match.length && !args.length) {
       return
     }

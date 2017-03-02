@@ -8,7 +8,12 @@ describe('node-sync-glob transform', () => {
   afterAll(afterAllSpecs)
 
   it('should transform a file', (done) => {
-    syncGlob('tmp/mock/b.txt', 'tmp/trans', { transform: 'test/mock/transform.js' }, awaitMatch(
+    const close = syncGlob('tmp/mock/b.txt', 'tmp/trans', { transform: 'test/mock/transform.js' }, awaitMatch(
+      'error', (err) => {
+        close()
+        fail(err)
+        done()
+      },
       'copy', () => {
         expect(fs.existsSync('tmp/trans/b.txt')).toBe(false)
         expect(fs.existsSync('tmp/trans/b-replaced.txt')).toBe(true)
