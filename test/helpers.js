@@ -63,8 +63,10 @@ export const awaitMatch = (...args) => {
 
   return (event, data) => {
     if (event === 'error') {
+      // eslint-disable-next-line no-console
       console.error(`${event} -> ${data}`)
       if (data.stack) {
+        // eslint-disable-next-line no-console
         console.log(data.stack)
       }
 

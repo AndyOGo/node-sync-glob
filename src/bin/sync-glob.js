@@ -35,7 +35,10 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .help('help')
   .showHelpOnFail(false, 'Specify --help for available options')
   .epilog('copyright 2016')
-  .command('sources', 'One or more globs, files or directories to be mirrored (glob exclusions are supported as well - ! prefix)', { alias: 'sources' })
+  .command(
+    'sources', 'One or more globs, files or directories to be mirrored (glob exclusions are supported as well - ! prefix)',
+    { alias: 'sources' }
+  )
   .command('target', 'Destination folder for mirrored files', { alias: 'target' })
   .demand(2)
   .argv
@@ -88,6 +91,7 @@ const close = syncGlob(sources, target, {
       break
 
     case 'copy':
+    case 'mirror':
       // eslint-disable-next-line no-console
       console.log('%s %s to %s', chalk.bold('COPY'), chalk.yellow(path.relative(root, data[0])), chalk.yellow(path.relative(root, data[1])))
       break
@@ -109,7 +113,10 @@ const close = syncGlob(sources, target, {
 
     case 'no-delete':
       // eslint-disable-next-line no-console
-      console.log('%s: %s extraneous but not deleted (use %s)', chalk.bold.dim('IGNORED'), chalk.yellow(path.relative(root, data)), chalk.blue('--delete'))
+      console.log('%s: %s extraneous but not deleted (use %s)',
+        chalk.bold.dim('IGNORED'),
+        chalk.yellow(path.relative(root, data)),
+        chalk.blue('--delete'))
       break
 
     // Fallback: forgotten logs, displayed only in verbose mode
