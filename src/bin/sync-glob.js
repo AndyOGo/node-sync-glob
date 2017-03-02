@@ -24,6 +24,9 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .string('transform')
   .alias('t', 'transform')
   .describe('transform', 'A module name to transform each file. sync-glob lookups the specified name via "require()".')
+  .alias('e', 'exit-on-error')
+  .default('exit-on-error', true)
+  .describe('exit-on-error', 'Exit if an error occurred')
   .boolean('verbose')
   .alias('v', 'verbose')
   .default('verbose', false)
@@ -71,11 +74,15 @@ const close = syncGlob(sources, target, {
   switch (event) {
 
     case 'error':
-      console.error(chalk.bold.red(data.message || data))
+      console.error('%s %s', chalk.bold('ERROR'), chalk.bold.red(data.message || data))
 
-      if (close) close()
+      if (argv.exitOnError) {
+        if (typeof close === 'function') {
+          close()
+        }
 
-      process.exit(data.code || 2)
+        throw data
+      }
       break
 
     case 'copy':
