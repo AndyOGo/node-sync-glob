@@ -34,13 +34,21 @@ const defaults = {
  * @returns {CloseFunc} - Returns a close function which cancels active promises and watch mode.
  */
 // eslint-disable-next-line consistent-return
-const syncGlob = (sources, target, options, notify = () => {}) => {
+const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
     sources = [sources]
   }
   // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+
+  if (typeof options === 'function') {
+    // eslint-disable-next-line no-param-reassign
+    notify = options
+    // eslint-disable-next-line no-param-reassign
+    options = {}
+  }
+
   // eslint-disable-next-line no-param-reassign
   options = {
     ...defaults,
