@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path'
-
-import promisify from './promisify'
+import Promise, { promisify } from 'bluebird'
 
 const copy = promisify(fs.copy)
 const ensureDir = promisify(fs.ensureDir)

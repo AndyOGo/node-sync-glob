@@ -4,11 +4,11 @@ import fs from 'fs'
 import path from 'path'
 import globAll from 'glob-all'
 import chokidar from 'chokidar'
+import Promise, { promisify } from 'bluebird'
 
 import resolveTarget from './lib/resolve-target'
 import sourcesBases from './lib/sources-bases'
 import isGlob from './lib/is-glob'
-import promisify from './lib/promisify'
 import trimQuotes from './lib/trim-quotes'
 import { copyDir, copyFile, remove } from './lib/fs'
 
@@ -89,7 +89,7 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
     notify('no-delete', target)
   }
 
-  Promise.all(mirrorInit)
+  let mirrorPromiseAll = Promise.all(mirrorInit)
     .then(([files]) => Promise.all(files.map((file) => {
       const resolvedTarget = resolveTargetFromBases(file, target)
 
