@@ -11,7 +11,7 @@ describe('node-sync-glob watch', () => {
 
   it('should sync a file', (done) => {
     const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, awaitMatch(
-      'watch', () => {
+      'mirror', () => {
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
       },
       'copy', compare(() => {
@@ -27,7 +27,7 @@ describe('node-sync-glob watch', () => {
 
   it('should sync an array of files', (done) => {
     const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, awaitMatch(
-      'watch', () => {
+      'mirror', () => {
         fs.appendFileSync('tmp/mock/b.txt', 'foobarbaz')
       },
       'copy', compare(() => {
@@ -44,7 +44,7 @@ describe('node-sync-glob watch', () => {
 
   it('should sync a directory', (done) => {
     const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, awaitMatch(
-      'watch', () => {
+      'mirror', () => {
         fs.appendFileSync('tmp/mock/foo/b.txt', 'foobarbaz')
       },
       'copy', compareDir(() => {
