@@ -97,7 +97,7 @@ const close = syncGlob(sources, target, {
 
     case 'mirror':
       // eslint-disable-next-line no-console
-      console.log('%s %s to %s', chalk.bold('COPY'), chalk.green(data[0]), chalk.green(data[1]))
+      console.log('%s %s to %s', chalk.bold('MIRROR'), chalk.green(data[0]), chalk.green(data[1]))
       break
 
     case 'remove':
