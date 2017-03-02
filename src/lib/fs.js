@@ -2,6 +2,8 @@ import fs from 'fs-extra'
 import path from 'path'
 import Promise, { promisify } from 'bluebird'
 
+Promise.config({ cancellation: true })
+
 const copy = promisify(fs.copy)
 const ensureDir = promisify(fs.ensureDir)
 const readFile = promisify(fs.readFile)

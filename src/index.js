@@ -12,6 +12,8 @@ import isGlob from './lib/is-glob'
 import trimQuotes from './lib/trim-quotes'
 import { copyDir, copyFile, remove } from './lib/fs'
 
+Promise.config({ cancellation: true })
+
 const defaults = {
   watch: false,
   delete: true,
@@ -99,6 +101,9 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
     })), notifyError).then(() => {
       notify('mirror', [sources, target])
     }, notifyError)
+    .finally(() => {
+      mirrorPromiseAll = null
+    })
 
   // Watcher to keep in sync from that
   if (watch) {
@@ -108,11 +113,23 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
       ignoreInitial: true,
       awaitWriteFinish: true,
     })
+    let activePromises = []
     const closeWatcher = () => {
       if (watcher) {
         watcher.close()
         watcher = null
       }
+
+      if (mirrorPromiseAll) {
+        mirrorPromiseAll.cancel()
+        mirrorPromiseAll = null
+      }
+
+      activePromises.forEach((promise) => {
+        promise.cancel()
+      })
+
+      activePromises = null
     }
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
@@ -139,17 +156,30 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
             return
         }
 
-        promise.then(() => {
-          const eventMap = {
-            add: 'copy',
-            addDir: 'copy',
-            change: 'copy',
-            unlink: 'remove',
-            unlinkDir: 'remove',
-          }
+        activePromises.push(promise
+          .then(() => {
+            const eventMap = {
+              add: 'copy',
+              addDir: 'copy',
+              change: 'copy',
+              unlink: 'remove',
+              unlinkDir: 'remove',
+            }
 
-          notify(eventMap[event] || event, [source, resolvedTarget])
-        }, notifyError)
+            notify(eventMap[event] || event, [source, resolvedTarget])
+          }, notifyError)
+          .finally(() => {
+            if (activePromises) {
+              const index = activePromises.indexOf(promise)
+
+              if (index !== -1) {
+                activePromises.slice(index, 1)
+              }
+            }
+
+            promise = null
+          })
+        )
       })
       .on('error', notifyError)
 
