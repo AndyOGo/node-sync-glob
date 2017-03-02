@@ -49,6 +49,8 @@ export const copyDir = (source, target) => ensureDir(target)
  */
 export const remove = promisify(fs.remove)
 
+export const stat = promisify(fs.stat)
+
 /**
  * A custom function which transforms a given `file` contents and/or `target`.
  *
