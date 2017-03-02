@@ -84,9 +84,12 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
   ]
 
   if (options.delete) {
-    mirrorInit.push(remove(target).then(() => {
-      notify('remove', target)
-    }, notifyError))
+    mirrorInit.push(remove(target)
+      .then(() => {
+        notify('remove', target)
+      })
+      .catch(notifyError)
+    )
   } else {
     notify('no-delete', target)
   }
@@ -95,12 +98,16 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
     .then(([files]) => Promise.all(files.map((file) => {
       const resolvedTarget = resolveTargetFromBases(file, target)
 
-      return copyFile(file, resolvedTarget, transform).then(() => {
-        notify('copy', [file, resolvedTarget])
-      }, notifyError)
-    })), notifyError).then(() => {
+      return copyFile(file, resolvedTarget, transform)
+        .then(() => {
+          notify('copy', [file, resolvedTarget])
+        })
+        .catch(notifyError)
+    })))
+    .then(() => {
       notify('mirror', [sources, target])
-    }, notifyError)
+    })
+    .catch(notifyError)
     .finally(() => {
       mirrorPromiseAll = null
     })
@@ -167,7 +174,8 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
             }
 
             notify(eventMap[event] || event, [source, resolvedTarget])
-          }, notifyError)
+          })
+          .catch(notifyError)
           .finally(() => {
             if (activePromises) {
               const index = activePromises.indexOf(promise)
