@@ -10,7 +10,7 @@ import resolveTarget from './lib/resolve-target'
 import sourcesBases from './lib/sources-bases'
 import isGlob from './lib/is-glob'
 import trimQuotes from './lib/trim-quotes'
-import { copyDir, copyFile, remove } from './lib/fs'
+import { copyDir, copyFile, remove, stat } from './lib/fs'
 
 Promise.config({ cancellation: true })
 
@@ -34,13 +34,21 @@ const defaults = {
  * @returns {CloseFunc} - Returns a close function which cancels active promises and watch mode.
  */
 // eslint-disable-next-line consistent-return
-const syncGlob = (sources, target, options, notify = () => {}) => {
+const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   if (!Array.isArray(sources)) {
     // eslint-disable-next-line no-param-reassign
     sources = [sources]
   }
   // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+
+  if (typeof options === 'function') {
+    // eslint-disable-next-line no-param-reassign
+    notify = options
+    // eslint-disable-next-line no-param-reassign
+    options = {}
+  }
+
   // eslint-disable-next-line no-param-reassign
   options = {
     ...defaults,
@@ -95,12 +103,26 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
   }
 
   let mirrorPromiseAll = Promise.all(mirrorInit)
-    .then(([files]) => Promise.all(files.map((file) => {
-      const resolvedTarget = resolveTargetFromBases(file, target)
+    .then(([files]) => Promise.all(files.map((source) => {
+      const resolvedTarget = resolveTargetFromBases(source, target)
 
-      return copyFile(file, resolvedTarget, transform)
-        .then(() => {
-          notify('copy', [file, resolvedTarget])
+      return stat(source)
+        .then((stats) => {
+          let result
+
+          if (stats.isFile()) {
+            result = copyFile(source, resolvedTarget, transform)
+          } else if (stats.isDirectory()) {
+            result = copyDir(source, resolvedTarget)
+          }
+
+          if (result) {
+            result = result.then(() => {
+              notify('copy', [source, resolvedTarget])
+            })
+          }
+
+          return result
         })
         .catch(notifyError)
     })))

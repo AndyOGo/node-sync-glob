@@ -1,6 +1,8 @@
 import fs from 'fs-extra'
 import dirCompare from 'dir-compare'
 
+export const noop = () => {}
+
 export const beforeEachSpec = () => {
   fs.removeSync('tmp')
   fs.copySync('test/mock', 'tmp/mock')
@@ -48,8 +50,30 @@ export const awaitMatch = (...args) => {
   }
   let match = normalizeMatch(args.shift())
   let callback = args.shift()
+  let onError
+
+  if (match[0] === 'error') {
+    onError = callback
+
+    if (args.length) {
+      match = normalizeMatch(args.shift())
+      callback = args.shift()
+    }
+  }
 
   return (event, data) => {
+    if (event === 'error') {
+      console.error(`${event} -> ${data}`)
+      if (data.stack) {
+        console.log(data.stack)
+      }
+
+      if (onError) {
+        onError(data)
+      }
+      return
+    }
+
     if (!match.length && !args.length) {
       return
     }
@@ -71,9 +95,14 @@ export const awaitMatch = (...args) => {
   }
 }
 
-export const compare = (done, options) => (event, data) => {
-  if (event && Array.isArray(data)) {
-    const [source, target] = data
+export const compare = (done, source, target, options) => (event, data) => {
+  if (event) {
+    if (Array.isArray(data) && data.length === 2
+      && typeof data[0] === 'string' && typeof data[1] === 'string') {
+      // eslint-disable-next-line no-param-reassign
+      [source, target] = data
+    }
+
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
     expect(res.differences).toBe(0)
@@ -88,7 +117,7 @@ export const compare = (done, options) => (event, data) => {
   }
 }
 
-export const compareDir = (done, source, target, options) => (event) => {
+export const compareDir = (done, source, target, options = {}) => (event) => {
   if (event) {
     const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
 
