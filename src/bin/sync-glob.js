@@ -81,7 +81,7 @@ const close = syncGlob(sources, target, {
           close()
         }
 
-        throw data
+        process.exit(data.code || 2)
       }
       break
 
