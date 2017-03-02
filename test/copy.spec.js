@@ -1,46 +1,49 @@
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir } from './helpers'
+import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir, noop } from './helpers'
 
 describe('node-sync-glob copy', () => {
   beforeEach(beforeEachSpec)
   afterAll(afterAllSpecs)
 
   it('should copy a file', (done) => {
-    const close = syncGlob('tmp/mock/a.txt', 'tmp/copy', {}, awaitMatch(
+    const close = syncGlob('tmp/mock/a.txt', 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
-      'copy', compare(),
-      'mirror', done
+      'mirror', compare(done, 'tmp/mock/a.txt', 'tmp/copy/a.txt')
     ))
   })
 
   it('should copy an array of files', (done) => {
-    const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/copy', {}, awaitMatch(
+    const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
-      { copy: 2 }, compare(),
-      'mirror', done
+      'mirror', () => {
+        compare(noop, 'tmp/mock/a.txt', 'tmp/copy/a.txt')
+        compare(noop, 'tmp/mock/b.txt', 'tmp/copy/b.txt')
+
+        done()
+      }
     ))
   })
 
   it('should copy a directory (without contents)', (done) => {
     const awaitDone = awaitCount(4, done)
 
-    const close = syncGlob('tmp/mock/foo', 'tmp/copy', {}, awaitMatch(
+    const close = syncGlob('tmp/mock/foo', 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/foo', 'tmp/copy')
     ))
-    const close1 = syncGlob('tmp/mock/foo/', 'tmp/copy1', {}, awaitMatch(
+    const close1 = syncGlob('tmp/mock/foo/', 'tmp/copy1', awaitMatch(
       'error', (err) => {
         close1()
         fail(err)
@@ -48,7 +51,7 @@ describe('node-sync-glob copy', () => {
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/foo/', 'tmp/copy1')
     ))
-    const close2 = syncGlob('tmp/mock/@org', 'tmp/copy2', {}, awaitMatch(
+    const close2 = syncGlob('tmp/mock/@org', 'tmp/copy2', awaitMatch(
       'error', (err) => {
         close2()
         fail(err)
@@ -56,7 +59,7 @@ describe('node-sync-glob copy', () => {
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/@org', 'tmp/copy2')
     ))
-    const close3 = syncGlob('tmp/mock/@org/', 'tmp/copy3', {}, awaitMatch(
+    const close3 = syncGlob('tmp/mock/@org/', 'tmp/copy3', awaitMatch(
       'error', (err) => {
         close3()
         fail(err)
@@ -67,10 +70,10 @@ describe('node-sync-glob copy', () => {
   })
 
   xit('should copy an array of directories (without contents)', (done) => {
-    const close = syncGlob(['tmp/mock/foo', 'tmp/mock/bar/', 'tmp/mock/@org'], 'tmp/copy', {}, awaitMatch(
+    const close = syncGlob(['tmp/mock/foo', 'tmp/mock/bar/', 'tmp/mock/@org'], 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       'mirror', compare(done)
@@ -78,31 +81,31 @@ describe('node-sync-glob copy', () => {
   })
 
   it('should copy globs', (done) => {
-    const close = syncGlob('tmp/mock/@org/*.txt', 'tmp/copy', {}, awaitMatch(
+    const awaitDone = awaitCount(2, done)
+
+    const close = syncGlob('tmp/mock/@org/*.txt', 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
-      { copy: 3 }, compare(),
-      'mirror', done
+      'mirror', compareDir(awaitDone, 'tmp/mock/@org', 'tmp/copy')
     ))
-    const close1 = syncGlob('tmp/mock/foo/*.txt', 'tmp/copy1', {}, awaitMatch(
+    const close1 = syncGlob('tmp/mock/foo/*.txt', 'tmp/copy1', awaitMatch(
       'error', (err) => {
         close1()
         fail(err)
         done()
       },
-      { copy: 2 }, compare(),
-      'mirror', done
+      'mirror', compareDir(awaitDone, 'tmp/mock/foo', 'tmp/copy1')
     ))
   })
 
   it('should copy globstar', (done) => {
-    const close = syncGlob('tmp/mock/**/*', 'tmp/copy', {}, awaitMatch(
+    const close = syncGlob('tmp/mock/**/*', 'tmp/copy', awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       'mirror', compareDir(done, 'tmp/mock', 'tmp/copy')

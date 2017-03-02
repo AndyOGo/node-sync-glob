@@ -10,17 +10,19 @@ describe('node-sync-glob transform', () => {
   it('should transform a file', (done) => {
     const close = syncGlob('tmp/mock/b.txt', 'tmp/trans', { transform: 'test/mock/transform.js' }, awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
-      'copy', () => {
+      'mirror', () => {
         expect(fs.existsSync('tmp/trans/b.txt')).toBe(false)
         expect(fs.existsSync('tmp/trans/b-replaced.txt')).toBe(true)
 
         expect(`${fs.readFileSync('tmp/mock/b.txt')}\n\nTransformed file`).toEqual(`${fs.readFileSync('tmp/trans/b-replaced.txt')}`)
-      },
-      'mirror', done
+
+        close()
+        done()
+      }
     ))
   })
 })

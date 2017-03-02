@@ -12,8 +12,8 @@ describe('node-sync-glob watch', () => {
   it('should sync a file', (done) => {
     const close = syncGlob('tmp/mock/a.txt', 'tmp/sync/', { watch }, awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       ['watch', 'mirror'], () => {
@@ -33,8 +33,8 @@ describe('node-sync-glob watch', () => {
   it('should sync an array of files', (done) => {
     const close = syncGlob(['tmp/mock/a.txt', 'tmp/mock/b.txt'], 'tmp/sync', { watch }, awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       ['watch', 'mirror'], () => {
@@ -55,8 +55,8 @@ describe('node-sync-glob watch', () => {
   it('should sync a directory', (done) => {
     const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       ['watch', 'mirror'], () => {
@@ -75,10 +75,10 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync globstar', (done) => {
-    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', {}, awaitMatch(
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch }, awaitMatch(
       'error', (err) => {
-        close()
         fail(err)
+        close()
         done()
       },
       ['mirror', 'watch'], compareDir(() => {
