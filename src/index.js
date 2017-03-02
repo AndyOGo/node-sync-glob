@@ -4,13 +4,15 @@ import fs from 'fs'
 import path from 'path'
 import globAll from 'glob-all'
 import chokidar from 'chokidar'
+import Promise, { promisify } from 'bluebird'
 
 import resolveTarget from './lib/resolve-target'
 import sourcesBases from './lib/sources-bases'
 import isGlob from './lib/is-glob'
-import promisify from './lib/promisify'
 import trimQuotes from './lib/trim-quotes'
 import { copyDir, copyFile, remove } from './lib/fs'
+
+Promise.config({ cancellation: true })
 
 const defaults = {
   watch: false,
@@ -82,23 +84,33 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
   ]
 
   if (options.delete) {
-    mirrorInit.push(remove(target).then(() => {
-      notify('remove', target)
-    }, notifyError))
+    mirrorInit.push(remove(target)
+      .then(() => {
+        notify('remove', target)
+      })
+      .catch(notifyError)
+    )
   } else {
     notify('no-delete', target)
   }
 
-  Promise.all(mirrorInit)
+  let mirrorPromiseAll = Promise.all(mirrorInit)
     .then(([files]) => Promise.all(files.map((file) => {
       const resolvedTarget = resolveTargetFromBases(file, target)
 
-      return copyFile(file, resolvedTarget, transform).then(() => {
-        notify('copy', [file, resolvedTarget])
-      }, notifyError)
-    })), notifyError).then(() => {
+      return copyFile(file, resolvedTarget, transform)
+        .then(() => {
+          notify('copy', [file, resolvedTarget])
+        })
+        .catch(notifyError)
+    })))
+    .then(() => {
       notify('mirror', [sources, target])
-    }, notifyError)
+    })
+    .catch(notifyError)
+    .finally(() => {
+      mirrorPromiseAll = null
+    })
 
   // Watcher to keep in sync from that
   if (watch) {
@@ -108,11 +120,23 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
       ignoreInitial: true,
       awaitWriteFinish: true,
     })
+    let activePromises = []
     const closeWatcher = () => {
       if (watcher) {
         watcher.close()
         watcher = null
       }
+
+      if (mirrorPromiseAll) {
+        mirrorPromiseAll.cancel()
+        mirrorPromiseAll = null
+      }
+
+      activePromises.forEach((promise) => {
+        promise.cancel()
+      })
+
+      activePromises = null
     }
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
@@ -139,17 +163,31 @@ const syncGlob = (sources, target, options, notify = () => {}) => {
             return
         }
 
-        promise.then(() => {
-          const eventMap = {
-            add: 'copy',
-            addDir: 'copy',
-            change: 'copy',
-            unlink: 'remove',
-            unlinkDir: 'remove',
-          }
+        activePromises.push(promise
+          .then(() => {
+            const eventMap = {
+              add: 'copy',
+              addDir: 'copy',
+              change: 'copy',
+              unlink: 'remove',
+              unlinkDir: 'remove',
+            }
 
-          notify(eventMap[event] || event, [source, resolvedTarget])
-        }, notifyError)
+            notify(eventMap[event] || event, [source, resolvedTarget])
+          })
+          .catch(notifyError)
+          .finally(() => {
+            if (activePromises) {
+              const index = activePromises.indexOf(promise)
+
+              if (index !== -1) {
+                activePromises.slice(index, 1)
+              }
+            }
+
+            promise = null
+          })
+        )
       })
       .on('error', notifyError)
 
