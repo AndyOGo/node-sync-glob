@@ -102,7 +102,7 @@ const close = syncGlob(sources, target, {
 
     case 'remove':
       // eslint-disable-next-line no-console
-      console.log('%s %s', chalk.bold('DELETE'), chalk.yellow(path.relative(root, data)))
+      console.log('%s %s', chalk.bold('DELETE'), chalk.yellow(path.relative(root, data[1] || data[0])))
       break
 
     case 'watch':
