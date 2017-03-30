@@ -94,7 +94,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   if (options.delete) {
     mirrorInit.push(remove(target)
       .then(() => {
-        notify('remove', target)
+        notify('remove', [target])
       })
       .catch(notifyError)
     )
