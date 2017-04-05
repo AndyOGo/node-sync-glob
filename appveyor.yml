@@ -29,8 +29,8 @@ test_script:
   - node --version
   - npm --version
   # run tests
-  - npm lint
-  - npm test
+  - npm run lint
+  - npm run test
 
 # Don't actually build.
 build: off
