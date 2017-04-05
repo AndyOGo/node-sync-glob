@@ -1,7 +1,5 @@
-import fs from 'fs-extra'
-
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitMatch } from './helpers'
+import { beforeEachSpec, afterAllSpecs, awaitMatch, fs } from './helpers'
 
 describe('node-sync-glob transform', () => {
   beforeEach(beforeEachSpec)

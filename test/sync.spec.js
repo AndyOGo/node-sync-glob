@@ -1,7 +1,5 @@
-import fs from 'fs-extra'
-
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitMatch, compare, compareDir } from './helpers'
+import { beforeEachSpec, afterAllSpecs, awaitMatch, compare, compareDir, fs } from './helpers'
 
 const watch = true
 
