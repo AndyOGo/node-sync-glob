@@ -1,12 +1,21 @@
 git:
   depth: 3
+
 language: node_js
+
+os:
+  - linux
+  - osx
+
 node_js:
   - "node"
+
 install:
   - npm install
+
 before_script:
   - npm run lint
   - npm run test
+
 script:
-- npm run build
+  - npm run build
