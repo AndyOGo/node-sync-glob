@@ -12,6 +12,9 @@ platform:
   - x86
   - x64
 
+# Maximum number of concurrent jobs for the project
+max_jobs: 4
+
 # fix newlines
 init:
   - git config --global core.autocrlf true
