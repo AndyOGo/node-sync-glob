@@ -1,11 +1,12 @@
 import fs from 'fs-extra'
+import path from 'path'
 import dirCompare from 'dir-compare'
 
 export const noop = () => {}
 
 export const beforeEachSpec = () => {
   fs.removeSync('tmp')
-  fs.copySync('test/mock', 'tmp/mock')
+  fs.copySync(path.normalize('test/mock'), path.normalize('tmp/mock'))
 }
 
 export const afterAllSpecs = () => {
@@ -105,7 +106,7 @@ export const compare = (done, source, target, options) => (event, data) => {
       [source, target] = data
     }
 
-    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+    const res = dirCompare.compareSync(path.normalize(source), path.normalize(target), { ...options, compareSize: true, compareContent: true })
 
     expect(res.differences).toBe(0)
     expect(res.differencesFiles).toBe(0)
@@ -121,7 +122,7 @@ export const compare = (done, source, target, options) => (event, data) => {
 
 export const compareDir = (done, source, target, options = {}) => (event) => {
   if (event) {
-    const res = dirCompare.compareSync(source, target, { ...options, compareSize: true, compareContent: true })
+    const res = dirCompare.compareSync(path.normalize(source), path.normalize(target), { ...options, compareSize: true, compareContent: true })
 
     expect(res.differences).toBe(0)
     expect(res.differencesFiles).toBe(0)

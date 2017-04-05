@@ -1,4 +1,5 @@
 import fs from 'fs-extra'
+import path from 'path'
 
 import syncGlob from '../src/index'
 import { beforeEachSpec, afterAllSpecs, awaitMatch } from './helpers'
@@ -15,10 +16,10 @@ describe('node-sync-glob transform', () => {
         done()
       },
       'mirror', () => {
-        expect(fs.existsSync('tmp/trans/b.txt')).toBe(false)
-        expect(fs.existsSync('tmp/trans/b-replaced.txt')).toBe(true)
+        expect(fs.existsSync(path.normalize('tmp/trans/b.txt'))).toBe(false)
+        expect(fs.existsSync(path.normalize('tmp/trans/b-replaced.txt'))).toBe(true)
 
-        expect(`${fs.readFileSync('tmp/mock/b.txt')}\n\nTransformed file`).toEqual(`${fs.readFileSync('tmp/trans/b-replaced.txt')}`)
+        expect(`${fs.readFileSync(path.normalize('tmp/mock/b.txt'))}\n\nTransformed file`).toEqual(`${fs.readFileSync(path.normalize('tmp/trans/b-replaced.txt'))}`)
 
         close()
         done()
