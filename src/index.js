@@ -148,11 +148,13 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
       mirrorPromiseAll = null
     }
 
-    activePromises.forEach((promise) => {
-      promise.cancel()
-    })
+    if (activePromises) {
+      activePromises.forEach((promise) => {
+        promise.cancel()
+      })
 
-    activePromises = null
+      activePromises = null
+    }
   }
 
   // Watcher to keep in sync from that
