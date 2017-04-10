@@ -114,7 +114,7 @@ export const compare = (done, source, target, options) => (event, data) => {
       [source, target] = data
     }
 
-    const res = dirCompare.compareSync(path.normalize(source), path.normalize(target), {
+    const res = dirCompare.compareSync(source, target, {
       ...options,
       compareSize: true,
       compareContent: true,
@@ -134,7 +134,7 @@ export const compare = (done, source, target, options) => (event, data) => {
 
 export const compareDir = (done, source, target, options = {}) => (event) => {
   if (event) {
-    const res = dirCompare.compareSync(path.normalize(source), path.normalize(target), {
+    const res = dirCompare.compareSync(source, target, {
       ...options,
       compareSize: true,
       compareContent: true,
