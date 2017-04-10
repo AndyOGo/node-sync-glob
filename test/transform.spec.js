@@ -12,7 +12,7 @@ describe('node-sync-glob transform', () => {
         close()
         done()
       },
-      'mirror', (...args) => {
+      'mirror', () => {
         expect(fs.existsSync('tmp/trans/b.txt')).toBe(false)
         expect(fs.existsSync('tmp/trans/b-replaced.txt')).toBe(true)
 
