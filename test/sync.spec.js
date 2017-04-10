@@ -15,10 +15,12 @@ describe('node-sync-glob watch', () => {
         done()
       },
       ['watch', 'mirror'], () => {
+        console.log('append')
         fs.appendFileSync('tmp/mock/a.txt', 'foobarbaz')
       },
       'copy', compare(() => {
         fs.removeSync('tmp/mock/a.txt')
+        console.log('removed')
       }),
       'remove', () => {
         expect(fs.existsSync('tmp/sync/a.txt')).toBe(false)
