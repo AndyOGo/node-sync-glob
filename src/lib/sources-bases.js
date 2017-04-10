@@ -49,6 +49,7 @@ const sourcesBases = (sources) => {
       }
     }
 
+    // eslint-disable-next-line no-param-reassign
     pattern = pattern.replace(reDirAll, path.sep)
 
     if (bases.indexOf(pattern) === -1) {
