@@ -82,7 +82,7 @@ To exclude stuff from source just use glob exclusion - `!` prefix, like:
 
 ### Windows
 
-As [`node-glob`](https://www.npmjs.com/package/glob#windows) and [`node-glob-all`](https://www.npmjs.com/package/glob-all) respectively only support unix style path separators `/`, don't usw windows style `\`.
+As [`node-glob`](https://www.npmjs.com/package/glob#windows) and [`node-glob-all`](https://www.npmjs.com/package/glob-all) respectively only support unix style path separators `/`, don't use windows style `\`.
 
 > **Please only use forward-slashes in glob expressions.**
 >
