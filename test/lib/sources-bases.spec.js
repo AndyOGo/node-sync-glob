@@ -27,14 +27,14 @@ describe('lib/sources-bases', () => {
 
   it('should resolve the base path of files', () => {
     expect(sourcesBases('test/mock/a.txt')).toEqual([`test${sep}mock`])
-    expect(sourcesBases('test/mock/@org/a.txt')).toEqual([`test${sep}mock/@org`])
+    expect(sourcesBases('test/mock/@org/a.txt')).toEqual([`test${sep}mock${sep}@org`])
   })
 
   it('should leave directories unchanged', () => {
     expect(sourcesBases('test/mock')).toEqual([`test${sep}mock`])
     expect(sourcesBases('test/mock/')).toEqual([`test${sep}mock`])
-    expect(sourcesBases('test/mock/@org')).toEqual([`test${sep}mock/@org`])
-    expect(sourcesBases('test/mock/@org/')).toEqual([`test${sep}mock/@org`])
+    expect(sourcesBases('test/mock/@org')).toEqual([`test${sep}mock${sep}@org`])
+    expect(sourcesBases('test/mock/@org/')).toEqual([`test${sep}mock${sep}@org`])
   })
 
   it('should ignore exclude patterns', () => {
@@ -48,10 +48,10 @@ describe('lib/sources-bases', () => {
       'test/mock/@org',
       'test/mock/foo/*.txt',
     ])).toEqual([
-      'test/mock',
-      'test/mock/bar',
-      'test/mock/@org',
-      'test/mock/foo',
+      `test${sep}mock`,
+      `test${sep}mock${sep}bar`,
+      `test${sep}mock${sep}@org`,
+      `test${sep}mock${sep}foo`,
     ])
   })
 
