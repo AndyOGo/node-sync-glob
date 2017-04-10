@@ -22,7 +22,8 @@ describe('node-sync-glob watch', () => {
         fs.removeSync('tmp/mock/a.txt')
         console.log('removed')
       }),
-      'remove', () => {
+      'remove', (...args) => {
+        console.log(args)
         expect(fs.existsSync('tmp/sync/a.txt')).toBe(false)
         close()
         done()
