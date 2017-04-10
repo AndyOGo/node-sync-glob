@@ -49,8 +49,10 @@ const sourcesBases = (sources) => {
       }
     }
 
+    pattern = pattern.replace(reDirAll, path.sep)
+
     if (bases.indexOf(pattern) === -1) {
-      bases.push(pattern.replace(reDirAll, path.sep))
+      bases.push(pattern)
     }
 
     return bases
