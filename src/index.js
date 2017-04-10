@@ -91,7 +91,12 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   // Initial mirror
   const mirrorInit = [
     promisify(globAll)(sources.map(source => (isGlob(source) === -1
-      && fs.statSync(source).isDirectory() ? `${source}/**` : source))),
+      && fs.statSync(source).isDirectory() ? `${source}/**` : source)))
+      .then((files) => {
+        console.log(files)
+
+        return files
+      }),
   ]
 
   if (options.delete) {
