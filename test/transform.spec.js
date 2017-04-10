@@ -13,7 +13,6 @@ describe('node-sync-glob transform', () => {
         done()
       },
       'mirror', (...args) => {
-        console.log(`MIRROR -> ${args}`)
         expect(fs.existsSync('tmp/trans/b.txt')).toBe(false)
         expect(fs.existsSync('tmp/trans/b-replaced.txt')).toBe(true)
 

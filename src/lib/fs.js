@@ -25,8 +25,6 @@ export const copyFile = (source, target, transform) => new Promise((resolve) => 
       const data = (isObject && transformed.data) || transformed
       const newTarget = (isObject && transformed.target) || target
 
-      console.error(`transform: ${target} -> ${newTarget}`)
-
       return ensureDir(path.dirname(newTarget)).then(() => writeFile(newTarget, data))
     }))
   } else {
