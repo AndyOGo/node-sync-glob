@@ -28,7 +28,11 @@ export const copyFile = (source, target, transform) => new Promise((resolve) => 
       return ensureDir(path.dirname(newTarget)).then(() => writeFile(newTarget, data))
     }))
   } else {
-    resolve(ensureDir(path.dirname(target)).then(() => copy(source, target)))
+    resolve(ensureDir(path.dirname(target)).then(() => {
+      console.log(`##+++*** copy ${source} -> ${target}`)
+
+      return copy(source, target)
+    }))
   }
 })
 
