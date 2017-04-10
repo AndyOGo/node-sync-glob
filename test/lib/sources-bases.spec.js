@@ -1,17 +1,18 @@
+import { sep } from 'path'
 import sourcesBases from '../../src/lib/sources-bases'
 
 describe('lib/sources-bases', () => {
   it('should resolve the base path of globs', () => {
     expect(sourcesBases('*')).toEqual([''])
-    expect(sourcesBases('test/mock/*.txt')).toEqual(['test/mock'])
-    expect(sourcesBases('test/mock/a*txt')).toEqual(['test/mock'])
+    expect(sourcesBases('test/mock/*.txt')).toEqual([`test${sep}mock`])
+    expect(sourcesBases('test/mock/a*txt')).toEqual([`test${sep}mock`])
 
     expect(sourcesBases('test/**/*.txt')).toEqual(['test'])
 
-    expect(sourcesBases('test/mock/?.txt')).toEqual(['test/mock'])
-    expect(sourcesBases('test/mock/a?txt')).toEqual(['test/mock'])
+    expect(sourcesBases('test/mock/?.txt')).toEqual([`test${sep}mock`])
+    expect(sourcesBases('test/mock/a?txt')).toEqual([`test${sep}mock`])
 
-    expect(sourcesBases('test/mock/{@org,foo}/.txt')).toEqual(['test/mock'])
+    expect(sourcesBases('test/mock/{@org,foo}/.txt')).toEqual([`test${sep}mock`])
 
     expect(sourcesBases('test/[a-z]')).toEqual(['test'])
     expect(sourcesBases('test/[!a-z]')).toEqual(['test'])
@@ -25,15 +26,15 @@ describe('lib/sources-bases', () => {
   })
 
   it('should resolve the base path of files', () => {
-    expect(sourcesBases('test/mock/a.txt')).toEqual(['test/mock'])
-    expect(sourcesBases('test/mock/@org/a.txt')).toEqual(['test/mock/@org'])
+    expect(sourcesBases('test/mock/a.txt')).toEqual([`test${sep}mock`])
+    expect(sourcesBases('test/mock/@org/a.txt')).toEqual([`test${sep}mock/@org`])
   })
 
   it('should leave directories unchanged', () => {
-    expect(sourcesBases('test/mock')).toEqual(['test/mock'])
-    expect(sourcesBases('test/mock/')).toEqual(['test/mock'])
-    expect(sourcesBases('test/mock/@org')).toEqual(['test/mock/@org'])
-    expect(sourcesBases('test/mock/@org/')).toEqual(['test/mock/@org'])
+    expect(sourcesBases('test/mock')).toEqual([`test${sep}mock`])
+    expect(sourcesBases('test/mock/')).toEqual([`test${sep}mock`])
+    expect(sourcesBases('test/mock/@org')).toEqual([`test${sep}mock/@org`])
+    expect(sourcesBases('test/mock/@org/')).toEqual([`test${sep}mock/@org`])
   })
 
   it('should ignore exclude patterns', () => {
@@ -55,8 +56,8 @@ describe('lib/sources-bases', () => {
   })
 
   it('should list common base baths no more than once', () => {
-    expect(sourcesBases(['test/mock/a.txt', 'test/mock/b.txt'])).toEqual(['test/mock'])
-    expect(sourcesBases(['test/mock', 'test/mock/'])).toEqual(['test/mock'])
+    expect(sourcesBases(['test/mock/a.txt', 'test/mock/b.txt'])).toEqual([`test${sep}mock`])
+    expect(sourcesBases(['test/mock', 'test/mock/'])).toEqual([`test${sep}mock`])
     expect(sourcesBases(['test/*.txt', 'test/*.txt'])).toEqual(['test'])
   })
 })
