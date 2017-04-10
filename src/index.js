@@ -57,9 +57,6 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
 
   const notifyError = (err) => { notify('error', err) }
   const bases = sourcesBases(sources)
-
-  console.log('+++++++++++')
-  console.log(bases)
   const resolveTargetFromBases = resolveTarget(bases)
   const { depth, watch } = options
   let { transform } = options
