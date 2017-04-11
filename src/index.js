@@ -100,7 +100,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
         if (debug) {
           console.log(`sources: ${sources} -> ${initSources}`)
           console.log(`target: ${originalTarget} -> ${target}`)
-          console.log(`globed files: ${files}`)
+          console.log(`globed files: \n\t${files.join('\n\t')}`)
         }
         return files
       }),
