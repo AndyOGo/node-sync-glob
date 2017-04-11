@@ -96,6 +96,7 @@ describe('node-sync-glob watch', () => {
 
   it('should sync empty sub directory deletion', (done) => {
     try {
+      console.log(`EXISTS: tmp/mock/bar -> ${fs.existsSync('tmp/mock/bar')}`)
       fs.ensureDirSync('tmp/mock/bar/empty')
 
       const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, debug: true }, awaitMatch(
