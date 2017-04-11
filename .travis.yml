@@ -14,7 +14,7 @@ node_js:
   - "4"
 
 install:
-  - npm install
+  - travis_wait npm install
 
 before_script:
   - node --version
