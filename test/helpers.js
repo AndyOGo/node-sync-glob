@@ -107,7 +107,7 @@ export const awaitMatch = (...args) => {
   }
 }
 
-const logDirDiffSet = (source, target, res) {
+const logDirDiffSet = (source, target, res) => {
   if (!res.same) {
     const logs = res.diffSet.map((entry) => {
       const state = {
