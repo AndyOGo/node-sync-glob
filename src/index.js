@@ -2,6 +2,7 @@
 
 import fs from 'fs'
 import path from 'path'
+import util from 'util'
 import globAll from 'glob-all'
 import chokidar from 'chokidar'
 import Promise, { promisify } from 'bluebird'
@@ -186,7 +187,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
         let promise
 
         if (debug) {
-          console.log(`ALL: ${event} -> ${source} ${stats ? `\t\n${stats}` : ''}`)
+          console.log(`ALL: ${event} -> ${source} ${stats ? `\t\n${util.inspect(stats)}` : ''}`)
         }
 
         switch (event) {
@@ -238,7 +239,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
 
     if (debug) {
       watcher.on('raw', (event, rpath, details) => {
-        console.log(`RAW: ${event} -> ${rpath} \t\n${details}`)
+        console.log(`RAW: ${event} -> ${rpath} \t\n${util.inspect(details)}`)
       })
     }
 
