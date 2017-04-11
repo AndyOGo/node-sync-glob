@@ -87,7 +87,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
 
   // Initial mirror
   const initSources = sources.map(source => (isGlob(source) === -1
-  && fs.statSync(source).isDirectory() ? `${source}/**` : source))
+  && fs.statSync(path.normalize(source)).isDirectory() ? `${source}/**` : source))
   const mirrorInit = [
     promisify(globAll)(initSources)
       .then(files => files.map(file => path.normalize(file)))
