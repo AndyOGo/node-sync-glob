@@ -234,8 +234,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
 
     if (debug) {
       watcher.on('raw', (event, rpath, details) => {
-        console.log(`RAW: ${event} -> ${rpath}`)
-        console.log(details)
+        console.log(`RAW: ${event} -> ${rpath} \t\n${details}`)
       })
     }
 
