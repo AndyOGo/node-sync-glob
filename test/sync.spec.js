@@ -51,7 +51,7 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync a directory', (done) => {
-    const close = syncGlob('tmp/mock/foo', 'tmp/sync', { watch, raw: true }, awaitMatch(
+    const close = syncGlob('tmp/mock/foo', 'tmp/sync', { watch, debug: true }, awaitMatch(
       'error', (err) => {
         fail(err)
         close()
@@ -73,7 +73,7 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync globstar', (done) => {
-    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, raw: true }, awaitMatch(
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, debug: true }, awaitMatch(
       'error', (err) => {
         fail(err)
         close()
@@ -97,7 +97,7 @@ describe('node-sync-glob watch', () => {
   it('should sync empty sub directory deletion', (done) => {
     fs.ensureDirSync('tmp/mock/bar/empty')
 
-    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, raw: true }, awaitMatch(
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, debug: true }, awaitMatch(
       'error', (err) => {
         fail(err)
         close()
