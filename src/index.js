@@ -88,7 +88,8 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   // Initial mirror
   const mirrorInit = [
     promisify(globAll)(sources.map(source => (isGlob(source) === -1
-      && fs.statSync(source).isDirectory() ? `${source}/**` : source))),
+      && fs.statSync(source).isDirectory() ? `${source}/**` : source)))
+      .then(files => files.map(file => path.normalize(file))),
   ]
 
   if (options.delete) {
@@ -147,11 +148,13 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
       mirrorPromiseAll = null
     }
 
-    activePromises.forEach((promise) => {
-      promise.cancel()
-    })
+    if (activePromises) {
+      activePromises.forEach((promise) => {
+        promise.cancel()
+      })
 
-    activePromises = null
+      activePromises = null
+    }
   }
 
   // Watcher to keep in sync from that

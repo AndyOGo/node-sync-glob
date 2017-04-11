@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/AndyOGo/node-sync-glob.svg?branch=master)](https://travis-ci.org/AndyOGo/node-sync-glob)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/9i48hbtrfsy5sk1m/branch/master?svg=true)](https://ci.appveyor.com/project/AndyOGo/node-sync-glob/branch/master)
+
 Synchronize files and folders locally by glob patterns, watch option included.
 
 ## Install
@@ -77,6 +79,21 @@ To exclude stuff from source just use glob exclusion - `!` prefix, like:
   }
 }
 ```
+
+### Windows
+
+As [`node-glob`](https://www.npmjs.com/package/glob#windows) and [`node-glob-all`](https://www.npmjs.com/package/glob-all) respectively only support unix style path separators `/`, don't use windows style `\`.
+
+> **Please only use forward-slashes in glob expressions.**
+>
+> Though windows uses either `/` or `\` as its path separator, only `/`
+> characters are used by this glob implementation.  You must use
+>forward-slashes **only** in glob expressions.  Back-slashes will always
+> be interpreted as escape characters, not path separators.
+>
+> Results from absolute patterns such as `/foo/*` are mounted onto the
+> root setting using `path.join`.  On windows, this will by default result
+> in `/foo/*` matching `C:\foo\bar.txt`.
 
 ## API
 

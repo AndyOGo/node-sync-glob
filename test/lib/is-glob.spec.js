@@ -3,7 +3,7 @@ import isGlob from '../../src/lib/is-glob'
 // eslint-disable-next-line no-bitwise
 const isGloby = value => !!~isGlob(value)
 
-describe('lib/is-glib', () => {
+describe('lib/is-glob', () => {
   describe('truthy', () => {
     it('should match asterisk wildcard', () => {
       expect(isGloby('*')).toBe(true)

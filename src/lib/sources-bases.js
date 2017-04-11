@@ -4,6 +4,7 @@ import path from 'path'
 import isGlob from './is-glob'
 
 const reDir = /\/|\\/
+const reDirAll = new RegExp(reDir.source, 'gm')
 
 /**
  * Determine the base paths of `sources` like:
@@ -47,6 +48,9 @@ const sourcesBases = (sources) => {
         pattern = pattern.slice(0, -1)
       }
     }
+
+    // eslint-disable-next-line no-param-reassign
+    pattern = pattern.replace(reDirAll, path.sep)
 
     if (bases.indexOf(pattern) === -1) {
       bases.push(pattern)
