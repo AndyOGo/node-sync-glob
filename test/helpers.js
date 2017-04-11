@@ -10,6 +10,7 @@ export const fs = {
   appendFileSync: (source, ...args) => fsExtra.appendFileSync(path.normalize(source), ...args),
   existsSync: source => fsExtra.existsSync(path.normalize(source)),
   readFileSync: source => fsExtra.readFileSync(path.normalize(source)),
+  ensureDirSync: source => fsExtra.ensureDirSync(path.normalize(source)),
 }
 
 export const beforeEachSpec = () => {
