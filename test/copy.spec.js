@@ -122,7 +122,7 @@ describe('node-sync-glob copy', () => {
         done()
       },
       'mirror', () => {
-        expect(fs.existsSync('tmp/mock/bar/empty')).toBe(true)
+        expect(fs.existsSync('tmp/copy/bar/empty')).toBe(true)
 
         compareDir(null, 'tmp/mock', 'tmp/copy')
 

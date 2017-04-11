@@ -108,7 +108,7 @@ describe('node-sync-glob watch', () => {
       }, 'tmp/mock', 'tmp/sync'),
       'remove', () => {
         expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
-        expect(fs.existsSync('tmp/mock/bar/empty')).toBe(false)
+        expect(fs.existsSync('tmp/sync/bar/empty')).toBe(false)
 
         close()
         done()
