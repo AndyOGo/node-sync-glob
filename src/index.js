@@ -181,9 +181,13 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
     })
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
-      .on('all', (event, source) => {
+      .on('all', (event, source, stats) => {
         const resolvedTarget = resolveTargetFromBases(source, target)
         let promise
+
+        if (debug) {
+          console.log(`ALL: ${event} -> ${source} ${stats ? `\t\n${stats}` : ''}`)
+        }
 
         switch (event) {
           case 'add':
