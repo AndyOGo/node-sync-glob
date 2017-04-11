@@ -93,4 +93,26 @@ describe('node-sync-glob watch', () => {
       }
     ))
   })
+
+  it('should sync empty sub directory deletion', (done) => {
+    fs.ensureDirSync('tmp/mock/bar/empty')
+
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch }, awaitMatch(
+      'error', (err) => {
+        fail(err)
+        close()
+        done()
+      },
+      ['mirror', 'watch'], compareDir(() => {
+        fs.removeSync('tmp/mock/bar/empty')
+      }, 'tmp/mock', 'tmp/sync'),
+      'remove', () => {
+        expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
+        expect(fs.existsSync('tmp/mock/bar/empty')).toBe(false)
+
+        close()
+        done()
+      }
+    ))
+  })
 })
