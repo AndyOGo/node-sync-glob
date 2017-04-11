@@ -60,7 +60,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   const notifyError = (err) => { notify('error', err) }
   const bases = sourcesBases(sources)
   const resolveTargetFromBases = resolveTarget(bases)
-  const { depth, watch } = options
+  const { depth, watch, raw } = options
   let { transform } = options
 
   if (typeof depth !== 'number' || isNaN(depth)) {
@@ -227,6 +227,13 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
         )
       })
       .on('error', notifyError)
+
+    if (raw) {
+      watcher.on('raw', (event, rpath, details) => {
+        console.log(`RAW: ${event} -> ${rpath}`)
+        console.log(details)
+      })
+    }
 
     process.on('SIGINT', close)
     process.on('SIGQUIT', close)
