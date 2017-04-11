@@ -41,6 +41,8 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   }
   // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+  // eslint-disable-next-line no-param-reassign
+  target = path.normalize(target)
 
   if (typeof options === 'function') {
     // eslint-disable-next-line no-param-reassign
