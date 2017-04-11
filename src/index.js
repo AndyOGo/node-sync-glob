@@ -18,6 +18,7 @@ const defaults = {
   watch: false,
   delete: true,
   depth: Infinity,
+  debug: false,
 }
 
 /**
@@ -29,6 +30,7 @@ const defaults = {
  * @param {bool} [options.watch=false] - Enable or disable watch mode.
  * @param {bool} [options.delete=true] - Whether to delete the `target`'s content initially.
  * @param {bool} [options.depth=Infinity] - Chokidars `depth` (If set, limits how many levels of subdirectories will be traversed).
+ * @param {bool} [options.debug=false] - Log essential information for debugging.
  * @param {string} [options.transform=false] - A module path resolved by node's `require`.
  * @param {NotifyCallback} [notify] - An optional notification callback.
  * @returns {CloseFunc} - Returns a close function which cancels active promises and watch mode.
@@ -41,6 +43,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   }
   // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+  const originalTarget = target
   // eslint-disable-next-line no-param-reassign
   target = path.normalize(target)
 
@@ -60,7 +63,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   const notifyError = (err) => { notify('error', err) }
   const bases = sourcesBases(sources)
   const resolveTargetFromBases = resolveTarget(bases)
-  const { depth, watch, raw } = options
+  const { depth, watch, debug } = options
   let { transform } = options
 
   if (typeof depth !== 'number' || isNaN(depth)) {
@@ -94,10 +97,11 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
     promisify(globAll)(initSources)
       .then(files => files.map(file => path.normalize(file)))
       .then((files) => {
-        console.log('----------')
-        console.log(initSources)
-        console.log('>>>>>>>>>>')
-        console.log(files)
+        if (debug) {
+          console.log(`sources: ${sources} -> ${initSources}`)
+          console.log(`target: ${originalTarget} -> ${target}`)
+          console.log(`globed files: ${files}`)
+        }
         return files
       }),
   ]
@@ -228,7 +232,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
       })
       .on('error', notifyError)
 
-    if (raw) {
+    if (debug) {
       watcher.on('raw', (event, rpath, details) => {
         console.log(`RAW: ${event} -> ${rpath}`)
         console.log(details)
