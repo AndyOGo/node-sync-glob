@@ -179,7 +179,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
       persistent: true,
       depth,
       ignoreInitial: true,
-      awaitWriteFinish: true,
+      // awaitWriteFinish: true,
       usePolling: true,
       useFsEvents: true,
     })
