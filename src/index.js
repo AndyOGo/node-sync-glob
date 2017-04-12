@@ -175,6 +175,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   // Watcher to keep in sync from that
   if (watch) {
     watcher = chokidar.watch(sources, {
+      cwd: process.cwd(),
       persistent: true,
       depth,
       ignoreInitial: true,
