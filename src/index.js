@@ -180,6 +180,8 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
       depth,
       ignoreInitial: true,
       awaitWriteFinish: true,
+      usePolling: true,
+      useFsEvents: true,
     })
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
