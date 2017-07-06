@@ -1,6 +1,8 @@
 /* globals process */
 
 import fs from 'fs'
+import gracefulFs from 'graceful-fs'
+gracefulFs.gracefulify(fs)
 import path from 'path'
 import util from 'util'
 import globAll from 'glob-all'
