@@ -47,6 +47,7 @@
     "chokidar": "^1.6.1",
     "fs-extra": "^2.1.2",
     "glob-all": "^3.1.0",
+    "graceful-fs": "^4.1.11",
     "yargs": "^6.3.0"
   },
   "devDependencies": {
