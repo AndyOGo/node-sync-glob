@@ -31,6 +31,10 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .alias('v', 'verbose')
   .default('verbose', false)
   .describe('verbose', 'Moar output')
+  .boolean('debug')
+  .alias('b', 'debug')
+  .default('debug', false)
+  .describe('debug', 'Log essential information for debugging')
   .version()
   .help('help')
   .showHelpOnFail(false, 'Specify --help for available options')
@@ -67,6 +71,7 @@ const close = syncGlob(sources, target, {
   watch: argv.watch,
   delete: argv.delete,
   depth: argv.depth || Infinity,
+  debug: argv.debug,
   transform: argv.transform,
 }, (event, data) => {
   const priority = notifyPriority[event] || 'low'

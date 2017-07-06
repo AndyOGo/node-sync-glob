@@ -51,7 +51,7 @@ describe('node-sync-glob watch', () => {
   })
 
   it('should sync a directory', (done) => {
-    const close = syncGlob('tmp/mock/foo', 'tmp/sync/', { watch }, awaitMatch(
+    const close = syncGlob('tmp/mock/foo', 'tmp/sync', { watch }, awaitMatch(
       'error', (err) => {
         fail(err)
         close()
@@ -88,6 +88,56 @@ describe('node-sync-glob watch', () => {
       'remove', () => {
         expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
         expect(fs.existsSync('tmp/sync/foo/d.txt')).toBe(false)
+        close()
+        done()
+      }
+    ))
+  })
+
+  it('should sync empty sub directory deletion', (done) => {
+    try {
+      console.log(`EXISTS: tmp/mock/bar -> ${fs.existsSync('tmp/mock/bar')}`)
+      fs.ensureDirSync('tmp/mock/bar/empty')
+
+      const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, debug: true }, awaitMatch(
+        'error', (err) => {
+          fail(err)
+          close()
+          done()
+        },
+        ['mirror', 'watch'], compareDir(() => {
+          fs.removeSync('tmp/mock/bar/empty')
+        }, 'tmp/mock', 'tmp/sync'),
+        'remove', () => {
+          expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
+          expect(fs.existsSync('tmp/sync/bar/empty')).toBe(false)
+
+          close()
+          done()
+        }
+      ))
+    } catch (err) {
+      console.log(err)
+
+      fail(err)
+      done()
+    }
+  })
+
+  it('should sync empty file deletion', (done) => {
+    const close = syncGlob('tmp/mock/**/*', 'tmp/sync', { watch, debug: true }, awaitMatch(
+      'error', (err) => {
+        fail(err)
+        close()
+        done()
+      },
+      ['mirror', 'watch'], compareDir(() => {
+        fs.removeSync('tmp/mock/emptyFile')
+      }, 'tmp/mock', 'tmp/sync'),
+      'remove', () => {
+        expect(fs.existsSync('tmp/sync/foo/b.txt')).toBe(true)
+        expect(fs.existsSync('tmp/sync/emptyFile')).toBe(false)
+
         close()
         done()
       }

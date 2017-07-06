@@ -10,6 +10,7 @@ export const fs = {
   appendFileSync: (source, ...args) => fsExtra.appendFileSync(path.normalize(source), ...args),
   existsSync: source => fsExtra.existsSync(path.normalize(source)),
   readFileSync: source => fsExtra.readFileSync(path.normalize(source)),
+  ensureDirSync: source => fsExtra.ensureDirSync(path.normalize(source)),
 }
 
 export const beforeEachSpec = () => {
@@ -106,6 +107,28 @@ export const awaitMatch = (...args) => {
   }
 }
 
+const logDirDiffSet = (source, target, res) => {
+  if (!res.same) {
+    const logs = res.diffSet.map((entry) => {
+      const state = {
+        equal: '==',
+        left: '->',
+        right: '<-',
+        distinct: '<>',
+      }[entry.state]
+      const name1 = entry.name1 ? entry.name1 : ''
+      const name2 = entry.name2 ? entry.name2 : ''
+      const path1 = entry.path1 ? entry.path1 : ''
+      const path2 = entry.path2 ? entry.path2 : ''
+      const { type1, type2 } = entry
+
+      return `${path1}/${name1} ${type1} ${state} ${path2}/${name2} ${type2}`
+    })
+
+    console.log(`${source} -> ${target}\n\t${logs.join('\n\t')}`)
+  }
+}
+
 export const compare = (done, source, target, options) => (event, data) => {
   if (event) {
     if (Array.isArray(data) && data.length === 2
@@ -119,6 +142,8 @@ export const compare = (done, source, target, options) => (event, data) => {
       compareSize: true,
       compareContent: true,
     })
+
+    logDirDiffSet(source, target, res)
 
     expect(res.differences).toBe(0)
     expect(res.differencesFiles).toBe(0)
@@ -139,6 +164,8 @@ export const compareDir = (done, source, target, options = {}) => (event) => {
       compareSize: true,
       compareContent: true,
     })
+
+    logDirDiffSet(source, target, res)
 
     expect(res.differences).toBe(0)
     expect(res.differencesFiles).toBe(0)

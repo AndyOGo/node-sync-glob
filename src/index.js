@@ -1,7 +1,12 @@
 /* globals process */
 
 import fs from 'fs'
+import gracefulFs from 'graceful-fs'
+
+gracefulFs.gracefulify(fs)
+/* eslint-disable import/first */
 import path from 'path'
+import util from 'util'
 import globAll from 'glob-all'
 import chokidar from 'chokidar'
 import Promise, { promisify } from 'bluebird'
@@ -18,6 +23,7 @@ const defaults = {
   watch: false,
   delete: true,
   depth: Infinity,
+  debug: false,
 }
 
 /**
@@ -29,6 +35,7 @@ const defaults = {
  * @param {bool} [options.watch=false] - Enable or disable watch mode.
  * @param {bool} [options.delete=true] - Whether to delete the `target`'s content initially.
  * @param {bool} [options.depth=Infinity] - Chokidars `depth` (If set, limits how many levels of subdirectories will be traversed).
+ * @param {bool} [options.debug=false] - Log essential information for debugging.
  * @param {string} [options.transform=false] - A module path resolved by node's `require`.
  * @param {NotifyCallback} [notify] - An optional notification callback.
  * @returns {CloseFunc} - Returns a close function which cancels active promises and watch mode.
@@ -41,6 +48,9 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   }
   // eslint-disable-next-line no-param-reassign
   sources = sources.map(trimQuotes)
+  const originalTarget = target
+  // eslint-disable-next-line no-param-reassign
+  target = path.normalize(target)
 
   if (typeof options === 'function') {
     // eslint-disable-next-line no-param-reassign
@@ -58,7 +68,7 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   const notifyError = (err) => { notify('error', err) }
   const bases = sourcesBases(sources)
   const resolveTargetFromBases = resolveTarget(bases)
-  const { depth, watch } = options
+  const { depth, watch, debug } = options
   let { transform } = options
 
   if (typeof depth !== 'number' || isNaN(depth)) {
@@ -86,10 +96,19 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   }
 
   // Initial mirror
+  const initSources = sources.map(source => (isGlob(source) === -1
+  && fs.statSync(path.normalize(source)).isDirectory() ? `${source}${source.slice(-1) === '/' ? '' : '/'}**` : source))
   const mirrorInit = [
-    promisify(globAll)(sources.map(source => (isGlob(source) === -1
-      && fs.statSync(source).isDirectory() ? `${source}/**` : source)))
-      .then(files => files.map(file => path.normalize(file))),
+    promisify(globAll)(initSources)
+      .then(files => files.map(file => path.normalize(file)))
+      .then((files) => {
+        if (debug) {
+          console.log(`sources: ${sources} -> ${initSources}`)
+          console.log(`target: ${originalTarget} -> ${target}`)
+          console.log(`globed files: \n\t${files.join('\n\t')}`)
+        }
+        return files
+      }),
   ]
 
   if (options.delete) {
@@ -160,16 +179,23 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
   // Watcher to keep in sync from that
   if (watch) {
     watcher = chokidar.watch(sources, {
+      cwd: process.cwd(),
       persistent: true,
       depth,
       ignoreInitial: true,
       awaitWriteFinish: true,
+      usePolling: true,
+      useFsEvents: true,
     })
 
     watcher.on('ready', notify.bind(undefined, 'watch', sources))
-      .on('all', (event, source) => {
+      .on('all', (event, source, stats) => {
         const resolvedTarget = resolveTargetFromBases(source, target)
         let promise
+
+        if (debug) {
+          console.log(`ALL: ${event} -> ${source} ${stats ? `\t\n${util.inspect(stats)}` : ''}`)
+        }
 
         switch (event) {
           case 'add':
@@ -217,6 +243,12 @@ const syncGlob = (sources, target, options = {}, notify = () => {}) => {
         )
       })
       .on('error', notifyError)
+
+    if (debug) {
+      watcher.on('raw', (event, rpath, details) => {
+        console.log(`RAW: ${event} -> ${rpath} \t\n${util.inspect(details)}`)
+      })
+    }
 
     process.on('SIGINT', close)
     process.on('SIGQUIT', close)

@@ -1,5 +1,5 @@
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir, noop } from './helpers'
+import { beforeEachSpec, afterAllSpecs, fs, awaitCount, awaitMatch, compare, compareDir, noop } from './helpers'
 
 describe('node-sync-glob copy', () => {
   beforeEach(beforeEachSpec)
@@ -109,6 +109,26 @@ describe('node-sync-glob copy', () => {
         done()
       },
       'mirror', compareDir(done, 'tmp/mock', 'tmp/copy')
+    ))
+  })
+
+  it('should copy empty sub directories', (done) => {
+    fs.ensureDirSync('tmp/mock/bar/empty')
+
+    const close = syncGlob('tmp/mock/**/*', 'tmp/copy', awaitMatch(
+      'error', (err) => {
+        fail(err)
+        close()
+        done()
+      },
+      'mirror', () => {
+        expect(fs.existsSync('tmp/copy/bar/empty')).toBe(true)
+
+        compareDir(null, 'tmp/mock', 'tmp/copy')
+
+        close()
+        done()
+      }
     ))
   })
 })
