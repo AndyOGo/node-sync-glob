@@ -2,7 +2,9 @@
 
 import fs from 'fs'
 import gracefulFs from 'graceful-fs'
+
 gracefulFs.gracefulify(fs)
+/* eslint-disable import/first */
 import path from 'path'
 import util from 'util'
 import globAll from 'glob-all'
