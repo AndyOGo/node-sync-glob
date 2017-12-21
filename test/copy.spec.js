@@ -1,5 +1,5 @@
 import syncGlob from '../src/index'
-import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir, noop } from './helpers'
+import { beforeEachSpec, afterAllSpecs, awaitCount, awaitMatch, compare, compareDir, noop, fs } from './helpers'
 
 describe('node-sync-glob copy', () => {
   beforeEach(beforeEachSpec)
@@ -98,6 +98,22 @@ describe('node-sync-glob copy', () => {
         done()
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/foo', 'tmp/copy1')
+    ))
+  })
+
+  it('should copy glob exclusion', (done) => {
+    const close = syncGlob(['tmp/mock/foo/*', '!tmp/mock/foo/b.txt'], 'tmp/copy', awaitMatch(
+      'error', (err) => {
+        fail(err)
+        close()
+        done()
+      },
+      'mirror', () => {
+        compare(noop, 'tmp/mock/foo/d.txt', 'tmp/copy/d.txt')
+        expect(fs.existsSync('tmp/copy/b.txt')).toBe(false)
+
+        done()
+      }
     ))
   })
 

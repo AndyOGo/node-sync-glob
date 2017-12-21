@@ -42,6 +42,13 @@ describe('lib/is-glob', () => {
       expect(isGloby('*(a|b|c)')).toBe(true)
       expect(isGloby('@(a|b|c)')).toBe(true)
     })
+
+    it('should match glob exclusion', () => {
+      expect(isGloby('!foo')).toBe(true)
+      expect(isGloby('!foo/bar')).toBe(true)
+      expect(isGloby('!foo/*')).toBe(true)
+      expect(isGloby('!foo/bar/**/*')).toBe(true)
+    })
   })
 
   describe('falsy', () => {
@@ -102,6 +109,16 @@ describe('lib/is-glob', () => {
       expect(isGloby('+(a|b|c\\)')).toBe(false)
       // expect(isGloby('*(a|b|c\\)')).toBe(false)
       expect(isGloby('@(a|b|c\\)')).toBe(false)
+    })
+
+    it('should not match empty glob exclusion', () => {
+      expect(isGloby('!')).toBe(false)
+    })
+
+    it('should not match escaped glob exclusion', () => {
+      expect(isGloby('\\!')).toBe(false)
+      expect(isGloby('\\!foo')).toBe(false)
+      expect(isGloby('\\!foo/bar')).toBe(false)
     })
 
     it('should not match non-globs', () => {
