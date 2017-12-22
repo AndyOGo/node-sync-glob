@@ -81,7 +81,7 @@ describe('node-sync-glob copy', () => {
   })
 
   it('should copy globs', (done) => {
-    const awaitDone = awaitCount(2, done)
+    const awaitDone = awaitCount(3, done)
 
     const close = syncGlob('tmp/mock/@org/*.txt', 'tmp/copy', awaitMatch(
       'error', (err) => {
@@ -91,6 +91,7 @@ describe('node-sync-glob copy', () => {
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/@org', 'tmp/copy')
     ))
+
     const close1 = syncGlob('tmp/mock/foo/*.txt', 'tmp/copy1', awaitMatch(
       'error', (err) => {
         close1()
@@ -98,6 +99,15 @@ describe('node-sync-glob copy', () => {
         done()
       },
       'mirror', compareDir(awaitDone, 'tmp/mock/foo', 'tmp/copy1')
+    ))
+
+    const close2 = syncGlob('tmp/mock/foo space/*.txt', 'tmp/copy 2', awaitMatch(
+      'error', (err) => {
+        close2()
+        fail(err)
+        done()
+      },
+      'mirror', compareDir(awaitDone, 'tmp/mock/foo space', 'tmp/copy 2')
     ))
   })
 
