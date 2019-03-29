@@ -31,6 +31,9 @@ const argv = yargs.usage('Usage: $0 <sources> <target>')
   .alias('v', 'verbose')
   .default('verbose', false)
   .describe('verbose', 'Moar output')
+  .alias('s', 'silent')
+  .default('silent', false)
+  .describe('silent', 'No output (except errors)')
   .version()
   .help('help')
   .showHelpOnFail(false, 'Specify --help for available options')
@@ -49,6 +52,11 @@ if (length < 2) {
   // eslint-disable-next-line no-console
   console.error(chalk.bold.red(`Expects exactly two arguments, received ${length}`))
   process.exit(1)
+}
+
+if (argv.silent) {
+  // eslint-disable-next-line no-console
+  console.log = () => {}
 }
 
 const root = process.cwd()
