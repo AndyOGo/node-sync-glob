@@ -36,6 +36,7 @@ Options:
                        the specified name via "require()".              [string]
   -e, --exit-on-error  Exit if an error occurred                 [default: true]
   -v, --verbose        Moar output                    [boolean] [default: false]
+  -s, --silent         No output (except errors)                [default: false]
 
 copyright 2016
 ```
