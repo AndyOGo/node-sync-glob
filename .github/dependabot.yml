@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: documentation
+    versions:
+    - 13.1.1
+    - 13.2.0
+    - 13.2.1
+    - 13.2.4
+  - dependency-name: dir-compare
+    versions:
+    - 3.0.0
+  - dependency-name: chalk
+    versions:
+    - 4.1.0
+  - dependency-name: babel-jest
+    versions:
+    - 23.6.0
