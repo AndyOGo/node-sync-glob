@@ -62,7 +62,7 @@
     "dir-compare": "^1.4.0",
     "documentation": "^4.0.0-beta.18",
     "eslint": "^3.9.1",
-    "eslint-config-airbnb-base": "^9.0.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.0.1",
     "jest": "^19.0.2"
   }
